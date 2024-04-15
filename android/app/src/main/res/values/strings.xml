@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BoardSales</string>
+    <string name="server_client_id">630453501551-5l40j4d7ncv42s0nebkk64s9s8phf51f.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">339610669115519</string>
+    <string name="fb_login_protocol_scheme">fb339610669115519</string>
+    <string name="facebook_client_token">a6299b1e2759e5d373997cf5bb2aff87</string>
 </resources>

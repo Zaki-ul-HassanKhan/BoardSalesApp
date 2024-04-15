@@ -1,116 +1,196 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Button,
-  TextInput,
   StyleSheet,
-  Pressable,
+  ImageBackground,
 } from 'react-native';
 
 
 import { useAuthContext } from '../../../context/AuthContext';
 import useAuthService from '../../../../shared/services/auth/auth.service';
-import axios from 'axios';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+import { GOOGLE_WEB_CLIENT_ID } from '../../../../config/config';
 
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import backgroundImage from '../../../../assets/images/home-screen-img.jpg';
+import boardsalelogo from '../../../../assets/images/board-sale-logo.png';
+import orsigninwith from '../../../../assets/images/or-sign-in-with.png';
+import { Box, Button, Center, FormControl, HStack, Heading, Image, Input, Link, Pressable, Text, VStack, useToast } from 'native-base';
+import { AccessToken, LoginButton } from 'react-native-fbsdk-next';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserResponseModel } from '../../../../models/user/UserResponseModel';
+import { GoogleLoginResponseModel } from '../../../../models/google/GoogleLoginResponseModel';
+import useUserService from '../../../../shared/services/user/user.service';
 const LoginScreen = () => {
+  const toast = useToast();
+  const ConfigureGoogleSignIn = () => {
+    GoogleSignin.configure({
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId: GOOGLE_WEB_CLIENT_ID, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      hostedDomain: '', // specifies a hosted domain restriction
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+      accountName: '', // [Android] specifies an account name on the device that should be used
+      googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+      openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
+      profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
+    });
+  }
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
+
+  const handleLoginFinished = (error: any, result: any) => {
+    console.log(result);
+    if (error) {
+      console.log("login has error: " + result.error);
+    } else if (result.isCancelled) {
+      console.log("login is cancelled.");
+    } else {
+      AccessToken.getCurrentAccessToken()?.then(
+        (data) => {
+          console.log(data?.accessToken.toString());
+        }
+      );
+    }
+  };
+  useEffect(() => {
+    console.log(GoogleSignin.getCurrentUser());
+    ConfigureGoogleSignIn();
+  }, []);
   const auth = useAuthContext();
   const authService = useAuthService();
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const APIDATA = async () =>{
-    // console.log("API FATA");
-    // const url = "https://jsonplaceholder.typicode.com/posts/1";
-    // let res = await fetch(url).then((respo)=>{console.log(respo)}).catch((res)=>{console.log(res)});
-    // // res = await res.json();
-    // console.log(res);192.168.0.115
-    try{
-      console.log("API DATA");
-      // const aa = await
-      // fetch('https://jsonplaceholder.typicode.com/todos/1')
-      // .then(response => { console.log("SUCCESSSSS"); console.log(response.json())})
-      // .then(json => console.log(json))
-
-     //const res = await axios.get('https://jsonplaceholder.typicode.com/posts/1').then((respo) => { console.log("SUCCESSSSS"); console.log(respo.data) }).catch((res) => { console.log(res) });
-      // console.log(res);
-    }
-    catch(error){
+  const [passwordShow, setPasswordShow] = React.useState(false);
+  const userService = useUserService();
+  console.log("IS RENDERED");
+  const RegisterSocialUser = (UserName: string, Name: string, ProfilePicture: string, platform: string) => {
+    userService.createUser({
+      UserName: UserName,
+      Password: "",
+      Name: Name,
+      ProfilePicture: ProfilePicture,
+      Platform: platform
+    }).then((res: UserResponseModel) => {
+      console.log("IF BACKKKK THEN");
+      console.log(res.token);
+      auth.setUserToken(res.token);
+      AsyncStorage.setItem('UserToken', res.token);
+    }).catch((error) => {
       console.log(error);
-    }
+    });
   }
+  const signIn = async () => {
+    try {
+      console.log("SIGNINGGGOL");
+      await GoogleSignin.hasPlayServices();
+      var userInfo: GoogleLoginResponseModel = await GoogleSignin.signIn();
+      RegisterSocialUser(userInfo.user.email, userInfo.user.name, userInfo.user.photo, "Google");
+      console.log(userInfo);
+    } catch (error: any) {
+      console.log(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
-      <View style={{ paddingHorizontal: 25 }}>
-        <View style={{ alignItems: 'center' }}>
-          <Text>Welocome to login where Token is {auth.userToken}</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setUserName}
-            value={userName}
-          />
-          <TextInput
-            style={styles.input}
-            secureTextEntry={true}
-            onChangeText={setPassword}
-            value={password}
-          />
-          <Pressable
-            onPress={() => {
-              const data= {
-                userName: "zaki",
-                password: "zaki"
-              };
-              authService.postUserCredentials({
-                userName: 'username',
-                password: 'password'
-              }).then((res:any)=>{
-                console.log("IF BACKKKK THEN");
-                console.log(res);
-              }).catch((error)=>{
-                console.log(error);
-              });
-              // APIDATA();
-              // axios({
-              //   method: 'get',
-              //   url: 'https://jsonplaceholder.typicode.com/users',
-              // }).then((response) => {
-              //   console.log(response.data);
-              // });
-              // axios.get('https://jsonplaceholder.typicode.com/users').then((response) => {
-              //   // console.log(response.data);
-              //   auth.setUserToken(response);
-              // }).catch(function (error) {
-              //    auth.setUserToken(error.message);
-              //     console.log(error);
-              //   });
-              // axios.post('https://192.168.100.77:7055/api/Authentication', {
-              //   userName: "Fred",
-              //   password: "Flintstone"
-              // })
-             
-              // .then(function (response) {
-              //   console.log(response);
-              // })
-              // .catch(function (error) {
-              //  auth.setUserToken(error.message);
-              //   console.log(error);
-              // });
-               
-            }}
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? 'rgb(210, 230, 255)' : 'white',
-              },
-              styles.wrapperCustom,
-            ]}>
-              <Text style={styles.text}>{'Login'}</Text>
-            </Pressable>
-        </View>
-      </View>
+    <ImageBackground source={backgroundImage} style={styles.container}>
+      <Box safeArea p="2" py="8" height='100%' w="90%" maxW="290">
+        <Center>
+          <Image alt="Board Sale Logo" source={boardsalelogo} />
+          <Heading fontWeight="800" marginTop='15px' width='110%' fontSize='sm' color="black" _dark={{
+            color: "black"
+          }}>
+            Selling and Buying Surfboards Made Simple
+          </Heading>
+        </Center>
 
-    </SafeAreaView>
+        <VStack space={3} marginTop='25px'>
+          <FormControl>
+            <Text color='black' marginBottom='2' fontWeight='600'>Email Address</Text>
+            <Input height='8' backgroundColor='#9ae9f5' size="xs" placeholder="Enter Your Email"
+              onChangeText={(name) => {
+
+                setUserName(name);
+              }} />
+          </FormControl>
+          <FormControl>
+            <Text color='black' marginBottom='2' fontWeight='600'>Password</Text>
+            <Input height='8' backgroundColor='#9ae9f5' size="xs"
+              onChangeText={(p) => {
+                setPassword(p);
+              }}
+              type={passwordShow ? "text" : "password"}
+              InputRightElement={<Pressable onPress={() => {
+                setPasswordShow(!passwordShow);
+
+              }}>
+                <FontAwesome5Icon name={passwordShow ? "eye" : "eye-slash"} size={15} color="black" />
+              </Pressable>
+
+              } placeholder="Password" mr="2" color="muted.400" />
+          </FormControl>
+          <Button isDisabled={(userName == null|| userName == "") 
+          || (password == null || password == "")} mt="2" backgroundColor="#9ad7f5" borderRadius='full'
+          onPress={pressed => {
+            // auth.setIsLoading(true);
+            authService.postUserCredentials({
+              UserName: userName,
+              Password: password
+            }).then((res: UserResponseModel) => {
+
+              console.log("IF BACKKKK THEN");
+              if (res.code === "400") {
+                toast.show({
+                  description: res.message,
+                })
+                return;
+              }
+              console.log(res);
+              auth.setUserToken(res.token);
+              AsyncStorage.setItem('UserToken', res.token);
+            }).catch((error) => {
+              console.log(error);
+            });
+
+          }}>
+            <Text color='black' fontWeight='600'>Log In</Text>
+          </Button>
+
+
+          <Center>
+            <Text color='black' fontWeight='600'>Forgotten your password?</Text>
+
+            <Image alt="Or sign in with" marginTop='10px' source={orsigninwith} />
+          </Center>
+          <Center>
+            <GoogleSigninButton
+              size={GoogleSigninButton.Size.Icon}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={signIn}
+            />
+            <LoginButton
+
+              onLoginFinished={(error, result) => handleLoginFinished(error, result)}
+              onLogoutFinished={() => console.log("logout.")}
+            />
+            <Text color='black' fontWeight='400'>Don't have an account ?</Text>
+            <Text color='black' marginTop='14px' fontWeight='600' onPress={pressed => {
+              navigation.navigate('Registeration');
+            }}>Create an Account</Text>
+          </Center>
+        </VStack>
+      </Box>
+    </ImageBackground>
+
   );
 };
 
@@ -124,9 +204,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconcontainer: {
+    flex: 1,
+    height: null,
+    width: null
+
   },
   text: {
-    fontSize: 16,
+    color: 'white',
+    fontSize: 40,
+    fontWeight: '500'
   },
   wrapperCustom: {
     borderRadius: 8,
@@ -138,7 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#f0f0f0',
     backgroundColor: '#f9f9f9',
-  },
+  }
 });
 
 export default LoginScreen;

@@ -13,14 +13,6 @@ function useAuthService(){
     [httpService]
 );
 
-
-// const postUserCredentials = useCallback(
-//     (onSuccess?:Function, onError?: Function) => {
-//         console.log("IN postUserCredentials");
-//     return httpService.get('https://jsonplaceholder.typicode.com/posts/1')
-// },
-// [httpService]
-// );
 const {current} = useRef({
     postUserCredentials
 })

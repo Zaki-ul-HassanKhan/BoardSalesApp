@@ -9,4 +9,5 @@ import 'react-native-gesture-handler';
 
 import "react-native-devsettings/withAsyncStorage";
 
+
 AppRegistry.registerComponent(appName, () => App);

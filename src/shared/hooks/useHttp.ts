@@ -27,6 +27,8 @@ async function httpGet(
 )
 {
     apiActionUrl = BASE_URL + apiActionUrl;
+    console.log("I AM IN GETT");
+    console.log(apiActionUrl);
     try{
         const response = await instance.get(apiActionUrl);
         return response;
@@ -41,9 +43,11 @@ async function httpPost(
     apiActionUrl : string,
     payload: object) {
         try{
+            console.log("I AM IN POST");
             apiActionUrl = BASE_URL + apiActionUrl;
+            console.log(apiActionUrl);
             const response = await instance.post(apiActionUrl, payload);
-            return response;
+            return response.data;
         }
         catch(error) {
             console.error(error);

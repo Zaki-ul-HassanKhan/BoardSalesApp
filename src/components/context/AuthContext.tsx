@@ -11,7 +11,7 @@ type AuthContextType = {
 export const AuthContextDefaults: AuthContextType = {
     isLoading: false,
     setIsLoading: () => { },
-    userToken: "I am Token hehrehr",
+    userToken: "",
     setUserToken: () => { }
 }
 const AuthContext = React.createContext<AuthContextType>(AuthContextDefaults);
@@ -20,7 +20,7 @@ export function useAuthContext(){
 }
 export function AuthProvider({ children }: PropsWithChildren) {
     const [isLoading, setIsLoading] = useState(false);
-    const [userToken, setUserToken] = useState("I am Token hehrehr");
+    const [userToken, setUserToken] = useState("");
     const value = { isLoading, setIsLoading, userToken, setUserToken };
      return (
 <AuthContext.Provider value={value}>

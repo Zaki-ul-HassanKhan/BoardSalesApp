@@ -1,4 +1,7 @@
 {
   "name": "BoardSales",
-  "displayName": "BoardSales"
+  "displayName": "BoardSales",
+    "plugins": [
+      "@react-native-google-signin/google-signin"
+    ]
 }
