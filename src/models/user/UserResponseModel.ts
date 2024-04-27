@@ -4,14 +4,18 @@ export interface UserResponseModel extends Response {
     dateAdded: string
     dateUpdated: any
     lastLogin: string
-    location: string
+    location: number
     locationName: string
     name: string
     profilePicture: string
+    boardLength:string
+    boardType:number
     role: any
     token: string
     userId: number
     userName: string
     verificationCode: any
     verified: boolean
+    getStartedCompleted: boolean
+    distance:number
   }

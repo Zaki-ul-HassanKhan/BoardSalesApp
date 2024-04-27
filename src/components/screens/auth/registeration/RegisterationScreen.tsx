@@ -8,9 +8,9 @@ import { UserResponseModel } from '../../../../models/user/UserResponseModel';
 import { useAuthContext } from '../../../context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const RegisterationScreen = () => {
+  const [email, setEmail] = React.useState("");
   const [passwordShow, setPasswordShow] = React.useState(false);
   const [confirmPasswordShow, setConfirmPasswordShow] = React.useState(false);
-  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [passwordMisMatch, setPasswordMisMatch] = React.useState(false);
@@ -98,7 +98,19 @@ const RegisterationScreen = () => {
                 }).then((res:UserResponseModel)=>{
                   console.log("IF BACKKKK THEN");
                   console.log(res.token);
-                  auth.setUserToken(res.token);
+                  auth.setUser((user: UserResponseModel) => {
+                    return { 
+                      ...user, 
+                      token: res.token,
+                      userId : Number(res.userId),
+                      getStartedCompleted : res.getStartedCompleted,
+                      name:res.name,
+                      location: res.location,
+                      distance: res.distance
+    
+                    }
+                  })
+                AsyncStorage.setItem('UserId',res.userId.toString());
                 AsyncStorage.setItem('UserToken',res.token);
                 }).catch((error)=>{
                   console.log(error);

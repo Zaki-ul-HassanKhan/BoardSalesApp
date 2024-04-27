@@ -1,11 +1,18 @@
 import axios, {AxiosInstance} from "axios";
 import { useAuthContext } from "../../components/context/AuthContext";
 import { BASE_URL } from "../../config/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useHttp(baseUrl:string){
     const authstate = useAuthContext();
-    if(authstate.userToken != ""){
-        axios.defaults.headers.common['Authorization'] = `Bearer ${authstate.userToken}`
+    if(authstate.user != null){
+        if(authstate.user.token != ""){
+        axios.defaults.headers.common['Authorization'] = `Bearer ${authstate.user.token}`
+        }
+    }
+    else{
+        AsyncStorage.setItem('UserToken', "");
+        AsyncStorage.setItem('UserId', "");
     }
 
     const instance = axios.create({ baseURL : baseUrl});
@@ -31,7 +38,7 @@ async function httpGet(
     console.log(apiActionUrl);
     try{
         const response = await instance.get(apiActionUrl);
-        return response;
+        return response.data;
     }
     catch(error) {
         console.error(error);

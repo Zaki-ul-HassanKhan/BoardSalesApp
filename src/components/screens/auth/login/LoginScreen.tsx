@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
   StyleSheet,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 
 
@@ -14,7 +15,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import backgroundImage from '../../../../assets/images/home-screen-img.jpg';
 import boardsalelogo from '../../../../assets/images/board-sale-logo.png';
 import orsigninwith from '../../../../assets/images/or-sign-in-with.png';
-import { Box, Button, Center, FormControl, HStack, Heading, Image, Input, Link, Pressable, Text, VStack, useToast } from 'native-base';
+import { Box, Button, Center, FormControl, HStack, Heading, Image, Input, Link, Pressable, ScrollView, Text, VStack, useToast } from 'native-base';
 import { AccessToken, LoginButton } from 'react-native-fbsdk-next';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -22,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserResponseModel } from '../../../../models/user/UserResponseModel';
 import { GoogleLoginResponseModel } from '../../../../models/google/GoogleLoginResponseModel';
 import useUserService from '../../../../shared/services/user/user.service';
+import { LookupsResponse } from '../../../../models/user/LooksResponse';
 const LoginScreen = () => {
   const toast = useToast();
   const ConfigureGoogleSignIn = () => {
@@ -75,7 +77,14 @@ const LoginScreen = () => {
     }).then((res: UserResponseModel) => {
       console.log("IF BACKKKK THEN");
       console.log(res.token);
-      auth.setUserToken(res.token);
+      auth.setUser((user: UserResponseModel) => {
+        return { 
+          ...user, 
+          token: res.token,
+          UserId : Number(res.userId)
+        }
+      })
+      AsyncStorage.setItem('UserId',res.userId.toString());
       AsyncStorage.setItem('UserToken', res.token);
     }).catch((error) => {
       console.log(error);
@@ -101,7 +110,20 @@ const LoginScreen = () => {
       }
     }
   };
+
+  const GetLookUps = () => {
+    userService.getLookups().then((res: LookupsResponse) => {
+      console.log(auth.user);
+      auth.setLookups(res);
+      auth.setIsLoading(false);
+      
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  
   return (
+    <ScrollView style={styles.box}>
     <ImageBackground source={backgroundImage} style={styles.container}>
       <Box safeArea p="2" py="8" height='100%' w="90%" maxW="290">
         <Center>
@@ -145,18 +167,33 @@ const LoginScreen = () => {
             authService.postUserCredentials({
               UserName: userName,
               Password: password
-            }).then((res: UserResponseModel) => {
-
+            }).then((res: any) => {
+             GetLookUps();
               console.log("IF BACKKKK THEN");
-              if (res.code === "400") {
+              if (res.result.code === "400") {
                 toast.show({
-                  description: res.message,
+                  description: res.result.message,
                 })
                 return;
               }
-              console.log(res);
-              auth.setUserToken(res.token);
-              AsyncStorage.setItem('UserToken', res.token);
+              console.log(res.result);
+              auth.setUser((user: UserResponseModel) => {
+                return { 
+                  ...user, 
+                  token: res.result.token,
+                  userId : Number(res.result.userId),
+                  getStartedCompleted : res.result.getStartedCompleted,
+                  name:res.result.name,
+                  location: res.result.location,
+                  distance: res.result.distance,
+                  boardType: res.result.boardType,
+                  boardLength: res.result.boardLength,
+                  profilePicture: res.result.profilePicture
+                }
+              })
+            AsyncStorage.setItem('UserId', String(res.result.userId));
+            AsyncStorage.setItem('UserToken', res.result.token);
+            AsyncStorage.setItem('GettingStarted', res.result.getStartedCompleted ? "1" : "0");
             }).catch((error) => {
               console.log(error);
             });
@@ -190,7 +227,7 @@ const LoginScreen = () => {
         </VStack>
       </Box>
     </ImageBackground>
-
+    </ScrollView>
   );
 };
 
@@ -205,28 +242,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    height: Dimensions.get('screen').height
   },
-  iconcontainer: {
-    flex: 1,
-    height: null,
-    width: null
-
-  },
-  text: {
-    color: 'white',
-    fontSize: 40,
-    fontWeight: '500'
-  },
-  wrapperCustom: {
-    borderRadius: 8,
-    padding: 6,
-  },
-  logBox: {
-    padding: 20,
-    margin: 10,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#f0f0f0',
-    backgroundColor: '#f9f9f9',
+  box : {
+    height: Dimensions.get('screen').height
   }
 });
 

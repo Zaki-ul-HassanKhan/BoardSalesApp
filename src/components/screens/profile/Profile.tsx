@@ -1,118 +1,99 @@
 import React from 'react'
-import { AspectRatio, Box, Center, Fab, HStack, Heading, Icon, Image, Stack, Text, VStack } from 'native-base'
-import { ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Button, Center, Divider, HStack, Icon, Image, Input, Text } from 'native-base'
+import { StyleSheet, View } from 'react-native'
 import design from '../../../assets/images/home-screen-img.jpg';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { PROFILEPIC_BASE_URL } from '../../../config/config';
+import { useAuthContext } from '../../context/AuthContext';
 const Profile = () => {
-    return (
-        //    <Center>
-        //     <Box alignItems="center" >
-        //       <Box borderColor="coolGray.200" roundedTop={100}  _dark={{
-        //       borderColor: "coolGray.600",
-        //       backgroundColor: "gray.700"
-        //     }} _web={{
-        //       shadow: 2,
-        //     }} _light={{
-        //       backgroundColor: "gray.50"
-        //     }}>
-        //         <Box>
-        //           <AspectRatio w="100%" ratio={16 / 9}>
-        //             <Image source={{
-        //             uri: "https://www.holidify.com/images/cmsuploads/compressed/Bangalore_citycover_20190613234056.jpg"
-        //           }} alt="image" />
-        //           </AspectRatio>
-        //           <Center position="absolute" bottom="-10" px="3"  zIndex={1}>
-        //             <Image borderRadius={50}  source={design} size={10} />
-        //           </Center>
-        //         </Box>
-        //         <Stack p="4" space={3} height='xl'>
-        //           <Stack space={2}>
-        //             <Heading size="md" ml="-1">
-        //               The Garden City
-        //             </Heading>
-        //             <Text fontSize="xs" _light={{
-        //             color: "violet.500"
-        //           }} _dark={{
-        //             color: "violet.400"
-        //           }} fontWeight="500" ml="-0.5" mt="-1">
-        //               The Silicon Valley of India.
-        //             </Text>
-        //           </Stack>
-        //           <Text fontWeight="400">
-        //             Bengaluru (also called Bangalore) is the center of India's high-tech
-        //             industry. The city is also known for its parks and nightlife.
-        //           </Text>
-        //           <HStack alignItems="center" space={4} justifyContent="space-between">
-        //             <HStack alignItems="center">
-        //               <Text color="coolGray.600" _dark={{
-        //               color: "warmGray.200"
-        //             }} fontWeight="400">
-        //                 6 mins ago
-        //               </Text>
-        //             </HStack>
-        //           </HStack>
-        //         </Stack>
-        //       </Box>
-        //     </Box>
-        //    </Center>
+  const auth = useAuthContext();
+  return (
+    <View style={styles.container}>
 
-        // <Center flex={1} zIndex={100}>
-        //     <VStack m="3" marginTop="100%" h="full" w="full" borderRadius="3xl" bg="cyan.200" >
-
-        //         <Text fontSize="lg" textAlign="center" _dark={{
-        //             color: "coolGray.800"
-        //         }}>
-        //             <Box>
-                        
-        //                 <Center position="absolute" marginX="-180px" bottom="-10" zIndex={1}>
-        //                     <Image borderRadius={50} source={design} size="sm"/>
-        //                 </Center>
-        //             </Box>
-        //         </Text>
-        //     </VStack>
-        // </Center>
-
-
-        <View style={styles.container}>
-      
       <Image source={require("../../../assets/images/home-screen-img.jpg")} style={styles.img} />
       <View style={styles.cont3}>
-       <Image source={design} style={styles.profilepic} />
+        <Image source={{uri:PROFILEPIC_BASE_URL + auth.user.profilePicture}} style={styles.profilepic} />
+        <HStack space={2}>
+          <Text>{auth.user.name}</Text>
+          <Button rounded={100} marginTop={-3} color={"#457EFF !important"} borderColor={"#457EFF"} height={10} variant="outline">Verify Account</Button>
+          <Input style={styles.searchBar} marginTop={-3} borderColor={"#457EFF"} placeholderTextColor={"#457EFF"} placeholder="Search" variant="outline" width="30%" borderRadius="100" mx="12" paddingTop="0" paddingBottom="0" InputRightElement={<Icon ml="2" mr="3" size="4" as={<Entypo name="magnifying-glass" />} />} />
+        </HStack>
+        <HStack space="16" marginTop="10px">
+          <Text>Range {auth.lookups.locations.filter(x=>x.key == auth.user.location)[0].value} ({auth.user.distance/2} miles)</Text>
+          <Button colorScheme="blue" size="sm" mx="4" style={{ display: 'flex', justifyContent: 'flex-end' }} leftIcon={<Icon ml="2" size="4" as={<Entypo name="magnifying-glass" />} />}>Edit</Button>
+        </HStack>
+        <HStack space="16" marginTop="10px" margin="20px">
+          <Text style={{ color: 'blue' }}>Board Range {"\n"}
+            {auth.user.boardLength.replaceAll("feet",`'`).replaceAll("inches",`"`)}</Text>
+          <Divider orientation="vertical" mx="3" _light={{
+            bg: "muted.800"
+          }} _dark={{
+            bg: "muted.50"
+          }} />
+          <Text style={{ color: 'blue' }}>GO-TO BOARD {"\n"}
+          {auth.lookups.boardTypes.filter(x=>x.key == auth.user.boardType)[0].value}</Text>
+        </HStack>
+        <HStack space="16" marginTop="10px">
+          <Text>Active Listing</Text>
+        </HStack>
+        <Center>
+          <HStack space="16" marginTop="10px">
+            <Image width="50px" height="50px" source={require('../../../assets/images/no-item-for-sale.png')}></Image>
+
+          </HStack>
+        </Center>
+        <Center>
+          <HStack space="16">
+            <Text>No Items for sale</Text>
+          </HStack>
+        </Center>
+        <Center>
+          <HStack space="16">
+            <Text>We see those boards in your garage collecting dust...</Text>
+          </HStack>
+        </Center>
+        <Center>
+          <HStack space="16" marginTop="10px">
+            <Button colorScheme="blue" size="sm" leftIcon={<Icon ml="2" size="4" as={<Entypo name="magnifying-glass" />} />}>Post an Item</Button>
+          </HStack>
+        </Center>
       </View>
     </View>
-    )
+  )
 };
 
 export default Profile
 
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "grey",
-    },
-    
-    profilepic:{
-        height: "13%",
-      width: "13%",
-      borderRadius:200/2,
-      marginTop:-20
-    },
-    img: {
-      height: "45%",
-      width: "100%",
-    },
-    cont3: {
-      flex: 1,
-      backgroundColor: "white",
-      width: "100%",
-      borderTopLeftRadius: 20,
-      borderTopRightRadius:20,
-      paddingHorizontal: 20,
-      zIndex:100,
-      marginTop:-15
-    },
-  });
-  
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+
+  profilepic: {
+    height: "13%",
+    width: "13%",
+    borderRadius: 200 / 2,
+    marginTop: -20
+  },
+  img: {
+    height: "45%",
+    width: "100%",
+  },
+  cont3: {
+    flex: 1,
+    backgroundColor: "white",
+    width: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    zIndex: 100,
+    marginTop: -15
+  },
+  searchBar: {
+    color: "#457EFF"
+  }
+});

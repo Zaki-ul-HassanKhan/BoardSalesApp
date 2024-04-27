@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,6 +10,7 @@ import GearScreen from '../gear/GearScreen';
 import PostBoard from '../boards/post/PostBoard';
 import ChatScreen from '../chat/ChatScreen';
 import MyListings from '../my-listings/MyListings';
+import { useAuthContext } from '../../context/AuthContext';
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
     const [boardSource, setBoardSource] = useState(true);
@@ -17,13 +18,15 @@ const Dashboard = () => {
     const [postBoardScreen, setPostBoardScreen] = useState(false);
     const [chatScreen, setChatScreen] = useState(false);
     const [listingScreen, setListingScreen] = useState(false);
-
+    // const [bottomOpacity, setBottomOpacity] = useState("100");
+const auth = useAuthContext();
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+    // useEffect(()=>{},[auth.bottomShow])
     return (
         <Tab.Navigator screenOptions={{
             headerShown: false, tabBarShowLabel: false, tabBarStyle: {
                 position: 'absolute', bottom: 25, left: 10, right: 10, elevation: 0, backgroundColor: '#457eff',
-                borderRadius: 30, height: 60
+                borderRadius: 30, height: 60, opacity:auth.bottomShow == false? 0 : 100, zIndex: auth.bottomShow == false? -1 : 100
             }
         }} initialRouteName='Board'>
            
@@ -52,13 +55,15 @@ const Dashboard = () => {
                 name="Board" component={BoardScreen} />
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed")
+                    console.log("BoardPressed");
+                    if(auth.bottomShow){
                     setBoardSource(false);
                     setListingScreen(false);
                     setChatScreen(false);
                     setPostBoardScreen(false);
                     setGearSource(true);
                     navigation.navigate("Gear");
+                    }
                 }}>
                     <View>
                         {gearSource &&
@@ -76,13 +81,16 @@ const Dashboard = () => {
 
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed")
+                    console.log("BoardPressed");
+                    if(auth.bottomShow){
+                    auth.setHeaderShow(false);
                     setBoardSource(false);
                     setGearSource(false);
                     setListingScreen(false);
                     setChatScreen(false);
                     setPostBoardScreen(true);
                     navigation.navigate("Post");
+                    }
                 }}>
                     <View>
                         {postBoardScreen &&
@@ -101,12 +109,14 @@ const Dashboard = () => {
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
                     console.log("BoardPressed")
+                    if(auth.bottomShow){
                     setBoardSource(false);
                     setGearSource(false);
                     setPostBoardScreen(false);
                     setListingScreen(false);
                     setChatScreen(true);
                     navigation.navigate("Chat");
+                    }
                 }}>
                     <View>
                         {chatScreen &&
@@ -125,12 +135,14 @@ const Dashboard = () => {
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
                     console.log("BoardPressed")
+                    if(auth.bottomShow){
                     setBoardSource(false);
                     setGearSource(false);
                     setChatScreen(false);
                     setPostBoardScreen(false);
                     setListingScreen(true);
                     navigation.navigate("MyListings");
+                    }
                 }}>
                     <View>
                         {listingScreen &&
