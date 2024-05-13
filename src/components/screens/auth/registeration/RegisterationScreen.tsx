@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Center, FormControl, Heading, Image, Input, Pressable, Text, VStack, View, WarningOutlineIcon } from 'native-base';
 import boardsaleicon from '../../../../assets/images/board-sale-icon.png';
-import { StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import useUserService from '../../../../shared/services/user/user.service';
 import { UserResponseModel } from '../../../../models/user/UserResponseModel';
@@ -18,7 +18,7 @@ const RegisterationScreen = () => {
   const userService = useUserService();
   const auth = useAuthContext();
   return (
-        <>
+        <ScrollView>
           <Center marginTop='50px'>
  <Image alt="Board Sale Logo" source={boardsaleicon} w='90' h='90' />
  <Heading fontWeight="800" marginTop='15px'fontSize='4xl' color="black" _dark={{
@@ -121,7 +121,7 @@ const RegisterationScreen = () => {
             
           </VStack>
         </Box>
-        </>
+        </ScrollView>
   )
 }
 

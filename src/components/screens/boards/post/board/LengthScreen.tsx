@@ -3,12 +3,14 @@ import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
 
 
 const LengthScreen = () => {
+    
+    const auth = useAuthContext();
     const [feet, setFeet] = useState('');
     const [inches, setInches] = useState('');
-
     const handleFeetChange = (text: string) => {
         setFeet(text);
     };
@@ -19,8 +21,10 @@ const LengthScreen = () => {
 
 
     const handleSubmit = () => {
-        console.log("Feet:", feet);
-        console.log("Inches:", inches);
+        var boards = auth.userBoards;
+        boards.Length = feet + "' " + inches +"''";
+        auth.setUserBoards(boards);
+        auth.setSelectedTab(7);
     };
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

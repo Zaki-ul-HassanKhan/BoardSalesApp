@@ -18,7 +18,9 @@ type AuthContextType = {
     bottomShow: boolean,
     setBottomShow: Function,
     userBoards: AppUpdateUserBoardsRequest,
-    setUserBoards: Function
+    setUserBoards: Function,
+    postType: number,
+    setPostType: Function,
 }
 
 const UserDefaults: UserResponseModel = {
@@ -58,10 +60,10 @@ const UserBoardsDefault: AppUpdateUserBoardsRequest = {
     Volume: "",
     Description: "",
     Price: "",
-    Location: "",
+    Location: 0,
     ConsiderSwap: false,
     IsFeatured: false,
-    TeeamBoard: false,
+    TeamBoard: false,
     Vintage: false,
     IsPosted: false,
     UserId: 0,
@@ -78,7 +80,10 @@ export const AuthContextDefaults: AuthContextType = {
         locations: [],
         code: "",
         message: "",
-        boardTypes: []
+        boardTypes: [],
+        shapers: [],
+        finSetup: [],
+        finSystem: []
     },
     setLookups: (LookupsResponse: LookupsResponse) => { },
     headerShow: true,
@@ -87,6 +92,8 @@ export const AuthContextDefaults: AuthContextType = {
     setBottomShow: () => { },
     userBoards: UserBoardsDefault,
     setUserBoards: (AppUpdateUserBoardsRequest: AppUpdateUserBoardsRequest) => { },
+    postType: 0,
+    setPostType: () => { },
 }
 const AuthContext = React.createContext<AuthContextType>(AuthContextDefaults);
 export function useAuthContext() {
@@ -99,11 +106,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const [headerShow, setHeaderShow] = useState(true);
     const [bottomShow, setBottomShow] = useState(true);
     const [userBoards, setUserBoards] = useState(UserBoardsDefault);
+    const [postType, setPostType] = useState(0);
     const [lookups, setLookups] = useState<LookupsResponse>(AuthContextDefaults.lookups);
     const value = {
         isLoading, setIsLoading, user, setUser, selectedTab, setSelectedTab,
         lookups, setLookups, headerShow, setHeaderShow, bottomShow, setBottomShow
-        , userBoards, setUserBoards
+        , userBoards, setUserBoards, postType, setPostType
     };
     return (
         <AuthContext.Provider value={value}>

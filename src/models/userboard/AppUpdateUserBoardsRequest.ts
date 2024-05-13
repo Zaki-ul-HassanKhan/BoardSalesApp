@@ -15,10 +15,10 @@ export interface AppUpdateUserBoardsRequest extends Request{
     Volume : string;
     Description : string;
     Price : string;
-    Location: string;
+    Location: number;
     ConsiderSwap : boolean;
     IsFeatured : boolean;
-    TeeamBoard : boolean;
+    TeamBoard : boolean;
     Vintage : boolean;
     IsPosted : boolean;
 }

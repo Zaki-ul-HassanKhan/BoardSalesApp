@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, ParamListBase, useNavigation } from '@react-navigation/native';
 import { GearCustomTabBar } from './GearCustomTabBar';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native';
@@ -22,7 +22,8 @@ import { FeaturedPost } from './FeaturedPost';
 import { PostedPriceLocation } from './PostedPriceLocation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useAuthContext } from '../../../../context/AuthContext';
-import { TodoList } from './PostaBoard';
+import { PostABoard } from './PostaBoard';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 
@@ -30,7 +31,15 @@ import { TodoList } from './PostaBoard';
 const GearTabNavigation = () => {
   
   const auth = useAuthContext();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const handleImageClick = () => {
+    if(auth.selectedTab == 0){
+      auth.setBottomShow(true);
+      auth.setPostType(0);
+      auth.setHeaderShow(false);
+    navigation.navigate("Post");
+
+    }
     auth.setSelectedTab(auth.selectedTab > 0 ? auth.selectedTab - 1 : auth.selectedTab);
   }
   const handleTabPress = (index: number) => {
@@ -83,12 +92,9 @@ const GearTabNavigation = () => {
               <Text style={{ color: 'black', fontWeight: '900', fontSize: 17 }}>Price & Location</Text>
             ) : null}
                           {auth.selectedTab === 12 ? (
-              <Text style={{ color: 'black', fontWeight: '900', fontSize: 17 }}>Normal Post</Text>
+              <Text style={{ color: 'black', fontWeight: '900', fontSize: 17 }}>{`${(auth.userBoards.IsFeatured == true || auth.userBoards.Vintage == true || auth.userBoards.TeamBoard == true) == true ? 'Featured Post' : 'Normal Post'}`}</Text>
             ) : null}
-                          {auth.selectedTab === 13 ? (
-              <Text style={{ color: 'black', fontWeight: '900', fontSize: 17 }}>Featured Post</Text>
-            ) : null}
-                           {auth.selectedTab === 14 ? (
+                           {auth.selectedTab === 13 ? (
               <Text style={{ color: 'black', fontWeight: '900', fontSize: 17 }}>Price & Location</Text>
             ) : null}
           </View>
@@ -100,7 +106,7 @@ const GearTabNavigation = () => {
         </View>
       </View>
       <GearCustomTabBar selectedTab={auth.selectedTab} handleTabPress={handleTabPress} />
-      {auth.selectedTab === 0 && <TodoList />}
+      {auth.selectedTab === 0 && <PostABoard />}
       {auth.selectedTab === 1 && <ConditionScreen/>}
       {auth.selectedTab === 2 && <BoardTypeScreen/>}
       {auth.selectedTab === 3 && <Shapers/>}
@@ -113,8 +119,7 @@ const GearTabNavigation = () => {
       {auth.selectedTab === 10 && <Description/>}
       {auth.selectedTab === 11 && <PriceLocation/>}
       {auth.selectedTab === 12 && <NormalPost/>}
-      {auth.selectedTab === 13 && <FeaturedPost/>}
-      {auth.selectedTab === 14 && <PostedPriceLocation/>}
+      {auth.selectedTab === 13 && <PostedPriceLocation/>}
     </View>
   );
 };

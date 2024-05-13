@@ -3,15 +3,21 @@ import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
 
 
 const Volume = () => {
 
+    const auth = useAuthContext();
     const [liters, setLiters] = useState('');
-    const handleInchesChange = (text: string) => {
+        const handleInchesChange = (text: string) => {
+            var boards = auth.userBoards;
+        boards.Volume = liters;
+        auth.setUserBoards(boards);
         setLiters(text);
     };
     const handleSubmit = () => {
+        auth.setSelectedTab(10);
         console.log("Liters:", liters);
     };
     return (

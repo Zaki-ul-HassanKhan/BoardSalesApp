@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Text, TouchableOpacity, TextInput, Button } from 'react-native';
 import { GearTabNavigation } from './board/GearTabNavigation';
 import { useAuthContext } from '../../../context/AuthContext';
@@ -9,12 +9,13 @@ const WhatDoYouWantToPost = () => {
         console.log("Next button pressed");
     };
 
-    const [postType, setPostType] = useState(0);
+    // const [postType, setPostType] = useState(0);
 const auth = useAuthContext();
+// useEffect(()=>{setPostType(0);},[postType]);
     return (
         <View style={{ flex: 1 }}>
 
-{postType == 0 &&
+{auth.postType == 0 &&
 <>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <Text style={{ paddingLeft: 15, color: 'black', fontWeight: '900', fontSize: 18 }}>What do you want to post?</Text>
@@ -37,7 +38,7 @@ const auth = useAuthContext();
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center',  paddingTop: 50 }}>
-                <TouchableOpacity onPress={() => {setPostType(1);auth.setBottomShow(false);}}>
+                <TouchableOpacity onPress={() => {auth.setPostType(1);auth.setBottomShow(false);}}>
                 <Image source={require('../../../../assets/images/surf-board-icon.jpg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
                 </TouchableOpacity>
             </View>
@@ -46,7 +47,7 @@ const auth = useAuthContext();
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', paddingTop: 50 }}>
-            <TouchableOpacity onPress={() => {setPostType(2);auth.setBottomShow(false);}}>
+            <TouchableOpacity onPress={() => {auth.setPostType(2);auth.setBottomShow(false);}}>
                 <Image source={require('../../../../assets/images/gear-icon.jpg')} style={{ width: 200, height: 200, borderRadius: 100 }} />
             </TouchableOpacity>
             </View>
@@ -55,7 +56,7 @@ const auth = useAuthContext();
             </View>
             </>
 }
-            {postType == 1 &&
+            {auth.postType == 1 &&
             <GearTabNavigation />
             }
         </View>

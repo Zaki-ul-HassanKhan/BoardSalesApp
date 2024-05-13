@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View ,Image, TouchableOpacity, TextInput, FlatList, StyleSheet, Dimensions} from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View , TouchableOpacity, TextInput, FlatList, StyleSheet, Dimensions} from 'react-native';
 import { useAuthContext } from '../../context/AuthContext';
-import { Button, HStack, Icon, Input, ScrollView, Slider, Switch, Text, useToast } from 'native-base';
+import { HStack, Icon, Slider, Switch, Text, useToast } from 'native-base';
 import { UserResponseModel } from '../../../models/user/UserResponseModel';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { UpdateUserResponse } from '../../../models/user/UpdateUserResponse';
 import useUserService from '../../../shared/services/user/user.service';
 const SelectLocation = () => {
   
@@ -12,17 +11,14 @@ const SelectLocation = () => {
   const [search, setSearch] = useState('');
   const [clicked, setClicked] = useState(false);
   const [data, setData] = useState(auth.lookups.locations);
-  const [selectedCity, setSelectedCity] = useState(auth.user.location);
-  const selectcity = auth.lookups.locations.filter(x=>x.key == auth.user.location);
-  console.log(selectcity);
-  const [selectedShowCity, setSelectedShowCity] = useState((selectcity == undefined || selectcity== null || selectcity.length == 0)? "Select City": selectcity[0].value);
+  const [selectedLocation, setSelectedLocation] = useState(auth.user.location);
+  const selectLocation = auth.lookups.locations.filter(x=>x.key == auth.user.location);
+  const [selectedShowLocation, setSelectedShowLocation] = useState((selectLocation == undefined || selectLocation== null || selectLocation.length == 0)? "Select Location": selectLocation[0].value);
   const [miles, setMiles] = useState(true);
   const [distance, setDistance] = useState(auth.user.distance);
-  const searchRef = useRef();
   const userService = useUserService();
   const toast = useToast();
   console.clear();
-  console.log(auth.user);
   const onSearch = (search: string) => {
     if (search !== '') {
       let tempData = data.filter(item => {
@@ -67,19 +63,8 @@ const SelectLocation = () => {
         setClicked(!clicked);
       }}>
       <Text style={{fontWeight:'600'}}>
-        {selectedCity == 0 ? 'Select Location' : selectedShowCity}
+        {selectedLocation == 0 ? 'Select Location' : selectedShowLocation}
       </Text>
-      {/* {clicked ? (
-        <Image
-          source={require('./upload.png')}
-          style={{width: 20, height: 20}}
-        />
-      ) : (
-        <Image
-          source={require('./dropdown.png')}
-          style={{width: 20, height: 20}}
-        />
-      )} */}
     </TouchableOpacity>
     {clicked ? (
       <View
@@ -125,8 +110,8 @@ const SelectLocation = () => {
                   borderColor: '#8e8e8e',
                 }}
                 onPress={() => {
-                  setSelectedCity(item.key);
-                  setSelectedShowCity(item.value)
+                  setSelectedLocation(item.key);
+                  setSelectedShowLocation(item.value)
                   setClicked(!clicked);
                   onSearch('');
                   setSearch('');
@@ -190,11 +175,11 @@ const SelectLocation = () => {
        <TouchableOpacity
           onPress={() => {
             console.log("ON NAME PARESS")
-            if (auth.user.location != selectedCity) {
+            if (auth.user.location != selectedLocation) {
               userService.updateUser({
                 UserId: auth.user.userId,
                 Name: auth.user.name,
-                Location: selectedCity,
+                Location: selectedLocation,
                 ProfilePicture: auth.user.profilePicture,
                 BoardLength: auth.user.boardLength,
                 BoardType: auth.user.boardType,
@@ -214,7 +199,7 @@ const SelectLocation = () => {
                       userId :auth.user.userId,
                       getStartedCompleted : auth.user.getStartedCompleted,
                       name:auth.user.name,
-                      location: selectedCity,
+                      location: selectedLocation,
                       distance: distance,
                       boardLength : auth.user.boardLength,
                       boardType : auth.user.boardType,

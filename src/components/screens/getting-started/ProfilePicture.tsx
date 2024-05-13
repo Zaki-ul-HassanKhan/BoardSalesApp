@@ -71,7 +71,6 @@ const ProfilePicture = () => {
             setImageBase64(image.data == null ? "" : image.data);
             setSelectedImage(image.path);
 
-            console.log(image);
         });
     };
 

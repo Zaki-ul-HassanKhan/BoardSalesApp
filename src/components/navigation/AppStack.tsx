@@ -31,8 +31,6 @@ function AppStack() {
 // const[ini]
 const auth = useAuthContext();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  console.log("APPSTACKKSS");
-  console.log(auth.headerShow);
   return (
     <>
       <Stack.Navigator initialRouteName={auth.user.getStartedCompleted ? "Dashboard" : "GettingStartedNavigation"}>

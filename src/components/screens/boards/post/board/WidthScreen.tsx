@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
-import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
 
 
 const WidthScreen = () => {
 
+    const auth = useAuthContext();
     const [inches, setInches] = useState('');
     const handleInchesChange = (text: string) => {
+        var boards = auth.userBoards;
+        boards.Width = inches;
+        auth.setUserBoards(boards);
         setInches(text);
     };
     const handleSubmit = () => {
+        auth.setSelectedTab(8);
         console.log("Inches:", inches);
     };
     return (

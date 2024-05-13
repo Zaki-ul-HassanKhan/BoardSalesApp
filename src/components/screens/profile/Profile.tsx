@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Center, Divider, HStack, Icon, Image, Input, Text } from 'native-base'
+import { Button, Center, Divider, HStack, Icon, Image, Input, ScrollView, Text } from 'native-base'
 import { StyleSheet, View } from 'react-native'
 import design from '../../../assets/images/home-screen-img.jpg';
 import Entypo from 'react-native-vector-icons/Entypo';

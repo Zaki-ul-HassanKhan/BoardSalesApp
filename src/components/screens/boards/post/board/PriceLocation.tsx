@@ -1,15 +1,29 @@
+import { AlertDialog, Button, Center, FormControl, Input, Modal } from 'native-base';
 import React, { useState } from 'react';
-import { Keyboard } from 'react-native';
+import { FlatList, Keyboard } from 'react-native';
 import { TouchableWithoutFeedback, Switch } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
 
 
 const PriceLocation = () => {
     const [text, settext] = useState('');
+    const auth = useAuthContext();
+  const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [board, setBoard] = useState(auth.userBoards);
+    const [clicked, setClicked] = useState(false);
+    const [data] = useState(auth.lookups.locations);
+    const [selectedLocation, setSelectedLocation] = useState(0);
+    const [selectedShowLocation, setSelectedShowLocation] = useState("");
+  const onClose = () => setIsOpen(false);
+const onOk = () =>{
+    setBoard(board);
+    setIsOpen(false);
+}
+  const cancelRef = React.useRef(null);
     const [Locationtext, setLocationtext] = useState('');
-
-    
     const handleTextChange = (text: string) => {
         settext(text);
     };
@@ -18,6 +32,7 @@ const PriceLocation = () => {
         console.log("Select Location")
     }
     const handleSubmit = () => {
+        auth.setSelectedTab(12);
         console.log("text:", text);
     };
     const [showToggle, setShowToggle] = useState(false);
@@ -32,12 +47,27 @@ const PriceLocation = () => {
     };
 
     const MakeitFeaturedPost = () => {
+        setIsOpen(true);
+        board.IsFeatured = true;
+        board.Vintage = false;
+        board.TeamBoard = false;
+        
         console.log("Make it Featured Post?")
     };
     const TeamBoard = () => {
+        setIsOpen(true);
+        board.IsFeatured = false;
+        board.Vintage = false;
+        board.TeamBoard = true;
+        
         console.log("TeamBoard")
     }
     const Vintage = () => {
+        setIsOpen(true);
+        board.IsFeatured = false;
+        board.Vintage = true;
+        board.TeamBoard = false;
+        
         console.log("Vintage")
     }
     return (
@@ -87,31 +117,76 @@ const PriceLocation = () => {
                     )}
                 </View>
                 <View style={{ alignItems: 'center', paddingTop: 20 }}>
-                    <Text style={{ color: 'black', fontWeight: '900', fontSize: 15 }}>Set you Location</Text>
+                    <Text style={{ color: 'black', fontWeight: '900', fontSize: 15 }}>Set your Location</Text>
                 </View>
-                <View style={styles.container}>
-                    {/* <TextInput
-                        style={styles.input}
-                        placeholder="Select a Location"
-                        onChangeText={SelectLocation}
-                        value={Locationtext}
-                    /> */}
-                         <TextInput
-                            style={{
-                                borderWidth: 1, borderColor: 'black', padding: 5,
-                                height: 40,
-                                marginBottom: 10,
-                                paddingHorizontal: 40,
-                                borderRadius: 5,
-                                color: 'black',
-                                textAlign: 'center',
+                <View style={{display:'flex', justifyContent:'center', padding: 10,
+        paddingLeft: 85}}>
+                
+                <TouchableOpacity
+                    style={{
+                        width: '75%',
+                        height: 50,
+                        borderRadius: 10,
+                        borderWidth: 0.5,
+                        marginTop: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingLeft: 15,
+                        paddingRight: 30
+                    }}
+                    onPress={() => {
+                        setClicked(!clicked);
+                    }}>
+                    <Text style={{ fontWeight: '600' }}>
+                        {selectedLocation == 0 ? 'Select Location' : selectedShowLocation}
+                    </Text>
+                </TouchableOpacity>
+                {clicked ? (
+                    <View
+                        style={{
+                            elevation: 5,
+                            marginTop: 80,
+                            height: 300,
+                            marginLeft:30,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: "center",
+                            width: '75%',
+                            backgroundColor: '#fff',
+                            borderRadius: 10,
+                            zIndex: 100,
+                            position: 'absolute',
+                        }}>
 
+                        <FlatList
+                            data={data}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <TouchableOpacity
+                                        style={{
+                                            width: '75%',
+                                            alignSelf: 'center',
+                                            height: 50,
+                                            justifyContent: 'center',
+                                            borderBottomWidth: 0.5,
+                                            borderColor: '#8e8e8e',
+                                        }}
+                                        onPress={() => {
+                                            setSelectedLocation(item.key);
+                                            setSelectedShowLocation(item.value)
+                                            setClicked(!clicked);
+                                            board.Location = item.key;
+                                            board.UserId = auth.user.userId;
+                                            auth.setUserBoards(board);
+                                        }}>
+                                        <Text style={{ fontWeight: '600' }}>{item.value}</Text>
+                                    </TouchableOpacity>
+                                );
                             }}
-                             placeholder="Select a Location"
-                            value={Locationtext}
-                            onChangeText={SelectLocation}
                         />
-                    <View />
+                    </View>
+                ) : null}
                 </View>
 
 
@@ -178,8 +253,32 @@ const PriceLocation = () => {
                         <Text style={{ color: 'black', fontWeight: 'bold' }}>Post</Text>
                     </TouchableOpacity>
                 </View>
+                <AlertDialog leastDestructiveRef={cancelRef} isOpen={isOpen} onClose={onClose}>
+        <AlertDialog.Content>
+          {/* <AlertDialog.CloseButton /> */}
+          <AlertDialog.Header>Special Post</AlertDialog.Header>
+          <AlertDialog.Body>
+          {`Hi ${auth.user.name}, \n`}
+          Thank you for considering our services for your special posting needs. 
+          We strive to accommodate all requests to the best of our ability. 
+          However, I wanted to kindly inform you that there will be an 10$ 
+          additional charge for the special posting of your item. This covers extra resources and attention required. 
+          {'\n Please feel free to ask if you need more details. \n'}
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button variant="unstyled" colorScheme="coolGray" onPress={onClose} ref={cancelRef}>
+                Cancel
+              </Button>
+              <Button colorScheme="success" onPress={onOk}>
+                Ok
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
             </View>
-           
+          
         </TouchableWithoutFeedback>
 
     );
@@ -189,7 +288,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 10,
         paddingLeft: 70,
-        paddingRight: 70,
+        paddingRight: 70
 
     },
     input: {

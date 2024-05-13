@@ -4,9 +4,11 @@ import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'reac
 import { WordCounter } from './WordCounter';
 import { TouchableWithoutFeedback } from 'react-native';
 import { Keyboard } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
 
 const Description = () => {
 
+    const auth = useAuthContext();
     const [text, setText] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const countWords = (inputText: string): number => {
@@ -17,8 +19,12 @@ const Description = () => {
     const handleTextChange = (newText: string) => {
         setText(newText);
         setWordCount(countWords(newText));
+        var boards = auth.userBoards;
+        boards.Description = newText;
+        auth.setUserBoards(boards);
     };
     const handleSubmit = () => {
+        auth.setSelectedTab(11);
         console.log("Input box value:", text);
     };
     return (

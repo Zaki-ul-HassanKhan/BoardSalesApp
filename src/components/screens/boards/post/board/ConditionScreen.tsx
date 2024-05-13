@@ -5,17 +5,24 @@ import { useAuthContext } from '../../../../context/AuthContext';
 const ConditionScreen = () => {
     const auth = useAuthContext();
     const [displayText, setDisplayText] = useState('');
-
     const handleImageClick = (text: string) => {
+        var boards = auth.userBoards;
+    
+   
         // Perform functionality here when the image is clicked
         if (text === 'Used') {
+            boards.Condition = 1;
+            auth.setSelectedTab(2);
             setDisplayText('You clicked on Used');
             console.log('You clicked on Used');
         } else if (text === 'New') {
+            boards.Condition = 1;
             setDisplayText('You clicked on New');
             console.log('You clicked on New');
 
         }
+        
+        auth.setUserBoards(boards);
     };
 
     return (

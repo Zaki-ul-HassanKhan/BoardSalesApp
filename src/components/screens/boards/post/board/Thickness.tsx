@@ -3,15 +3,20 @@ import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
 
 
 const Thickness = () => {
-
+    const auth = useAuthContext();
     const [inches, setInches] = useState('');
     const handleInchesChange = (text: string) => {
+        var boards = auth.userBoards;
+        boards.Thickness = inches;
+        auth.setUserBoards(boards);
         setInches(text);
     };
     const handleSubmit = () => {
+        auth.setSelectedTab(9);
         console.log("Inches:", inches);
     };
     return (

@@ -16,7 +16,7 @@ import backgroundImage from '../../../../assets/images/home-screen-img.jpg';
 import boardsalelogo from '../../../../assets/images/board-sale-logo.png';
 import orsigninwith from '../../../../assets/images/or-sign-in-with.png';
 import { Box, Button, Center, FormControl, HStack, Heading, Image, Input, Link, Pressable, ScrollView, Text, VStack, useToast } from 'native-base';
-import { AccessToken, LoginButton } from 'react-native-fbsdk-next';
+import { AccessToken, LoginButton, Profile } from 'react-native-fbsdk-next';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -49,13 +49,23 @@ const LoginScreen = () => {
     } else if (result.isCancelled) {
       console.log("login is cancelled.");
     } else {
-      AccessToken.getCurrentAccessToken()?.then(
-        (data) => {
-          console.log(data?.accessToken.toString());
-        }
-      );
+      currentProfile;
     }
   };
+
+  const currentProfile = Profile.getCurrentProfile().then(
+    function(currentProfile) {
+      if (currentProfile) {
+        console.log("The current logged user is: " +
+          currentProfile.name
+          + ". His profile id is: " +
+          currentProfile.userID
+        );
+
+        console.log(currentProfile);
+      }
+    }
+  );
   useEffect(() => {
     console.log(GoogleSignin.getCurrentUser());
     ConfigureGoogleSignIn();

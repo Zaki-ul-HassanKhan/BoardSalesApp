@@ -3,16 +3,34 @@ import { Keyboard } from 'react-native';
 import { TouchableWithoutFeedback, Switch } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { useAuthContext } from '../../../../context/AuthContext';
+import useUserBoardService from '../../../../../shared/services/userboard/userboard.service';
+import { AddUpdateUserBoardsResponse } from '../../../../../models/userboard/AddUpdateUserBoardsResponse';
+import { useToast } from 'native-base';
 
 
 const NormalPost = () => {
+    const auth = useAuthContext();
+    const userBoardService = useUserBoardService();
     const [textInputValue, setTextInputValue] = useState('');
-
+    
+    const toast = useToast();
     const handleTextInputChange = (textInputValue: string) => {
         setTextInputValue(textInputValue);
     };
     const handleSubmit = () => {
-        console.log(" pay now");
+
+        userBoardService.addUpdateUserBoard(auth.userBoards).then((res: AddUpdateUserBoardsResponse) => {
+            console.log(res);
+            if (res.code == "400") {
+                toast.show({
+                    description: res.message,
+                })
+            } else {
+                console.log(res);
+              
+            }
+        });
     };
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -25,7 +43,7 @@ const NormalPost = () => {
                             style={[styles.input, styles.placeholderText]}
                             onChangeText={handleTextInputChange}
                             value={textInputValue}
-                            placeholder="Total: $5"
+                            placeholder = {`Total: ${(auth.userBoards.IsFeatured == true || auth.userBoards.Vintage == true || auth.userBoards.TeamBoard == true) == true ? '$10' : '$5'}`}
                             placeholderTextColor="#aaaaaa"
                         />
                     </View>
