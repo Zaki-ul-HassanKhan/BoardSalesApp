@@ -6,7 +6,7 @@ import { Center, HStack, Pressable } from "native-base";
 import { useAuthContext } from "../../../../context/AuthContext";
 import ImagePicker from 'react-native-image-crop-picker';
 import DraggableFlatList from "react-native-draggable-flatlist";
-export const PostABoard = () => {
+export const PostAGear = () => {
   const auth = useAuthContext();
 
   const [data, setData] = useState<any[]>([]);
@@ -127,7 +127,7 @@ export const PostABoard = () => {
           <View style={{ paddingTop: 50, position: 'relative', bottom: 40, left: 0, right: 0, alignItems: 'center' }}>
             <TouchableOpacity
               onPress={() => {
-                auth.setUserBoards({ ImagesPath: data, Title: title });
+                auth.setUserGears({ ImagesPath: data, Title: title });
                 auth.setSelectedTab(1);
               }}
               style={{

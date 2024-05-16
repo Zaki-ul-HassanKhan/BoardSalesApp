@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { View, Text, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
-import { WordCounter } from './WordCounter';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { Keyboard } from 'react-native';
 import { useAuthContext } from '../../../../context/AuthContext';
 
-const Description = () => {
+const Description = () => { 
 
     const auth = useAuthContext();
     const [text, setText] = useState('');
@@ -14,7 +13,8 @@ const Description = () => {
     const countWords = (inputText: string): number => {
 
         const wordsArray = inputText.trim().split(/\s+/);
-        return wordsArray.length;
+        
+        return wordsArray ? wordsArray?.length: 0;
     };
     const handleTextChange = (newText: string) => {
         setText(newText);

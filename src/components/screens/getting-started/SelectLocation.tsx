@@ -13,12 +13,13 @@ const SelectLocation = () => {
   const [data, setData] = useState(auth.lookups.locations);
   const [selectedLocation, setSelectedLocation] = useState(auth.user.location);
   const selectLocation = auth.lookups.locations.filter(x=>x.key == auth.user.location);
-  const [selectedShowLocation, setSelectedShowLocation] = useState((selectLocation == undefined || selectLocation== null || selectLocation.length == 0)? "Select Location": selectLocation[0].value);
+  const [selectedShowLocation, setSelectedShowLocation] = useState((selectLocation == undefined || selectLocation== null || (selectLocation && selectLocation?.length == 0))? "Select Location": selectLocation[0].value);
   const [miles, setMiles] = useState(true);
   const [distance, setDistance] = useState(auth.user.distance);
   const userService = useUserService();
   const toast = useToast();
   console.clear();
+  console.log(auth.lookups.locations);
   const onSearch = (search: string) => {
     if (search !== '') {
       let tempData = data.filter(item => {
@@ -144,7 +145,7 @@ const SelectLocation = () => {
           <Slider.FilledTrack bg="blue.600" />
         </Slider.Track>
         <Slider.Thumb borderWidth="0" bg="transparent">
-          <Icon as={<FontAwesome name='circle-o' />} name="park" color="black.600" size="sm" />
+          <Icon as={<FontAwesome name='circle-o' />} name="park" size="sm" />
         </Slider.Thumb>
        
       </Slider>

@@ -1,13 +1,15 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useAuthContext } from '../../context/AuthContext';
+import useUserService from '../../../shared/services/user/user.service';
+import { LookupsResponse } from '../../../models/user/LooksResponse';
 
 const Welcome = () => {
   
   const auth = useAuthContext();
-
+ const userService = useUserService();
   // const handleTabPress = (index: number) => {
   //   setSelectedTab(index);
   // };
@@ -17,7 +19,15 @@ const Welcome = () => {
     // console.log('get started button pressed');
     // <IndividualORshopScreen4/>
   };
-
+useEffect(()=>{
+    userService.getLookups().then((res: LookupsResponse) => {
+      auth.setLookups(res);
+      auth.setIsLoading(false);
+      
+    }).catch((error) => {
+      console.log(error);
+    });
+},[]);
   return (
     <View style={{ flex: 1 }}>
       {/* <CustomTabBar selectedTab={selectedTab} handleTabPress={handleTabPress} /> */}

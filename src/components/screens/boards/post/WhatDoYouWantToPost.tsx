@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, Text, TouchableOpacity, TextInput, Button } from 'react-native';
-import { GearTabNavigation } from './board/GearTabNavigation';
+import React from 'react';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 import { useAuthContext } from '../../../context/AuthContext';
+import { BoardTabNavigation } from './board/BoardTabNavigation';
+import { GearTabNavigation } from './gear/GearTabNavigation';
 
 const WhatDoYouWantToPost = () => {
     const handletoclose = () => {
@@ -57,6 +58,9 @@ const auth = useAuthContext();
             </>
 }
             {auth.postType == 1 &&
+            <BoardTabNavigation />
+            }
+            {auth.postType == 2 && 
             <GearTabNavigation />
             }
         </View>

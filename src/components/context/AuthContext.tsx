@@ -3,6 +3,7 @@ import { PropsWithChildren, useState } from "react";
 import { UserResponseModel } from "../../models/user/UserResponseModel";
 import { LookupsResponse } from "../../models/user/LooksResponse";
 import { AppUpdateUserBoardsRequest } from "../../models/userboard/AppUpdateUserBoardsRequest";
+import { AddUpdateUserGearsRequest } from "../../models/usergears/AddUpdateUserGearsRequest";
 
 type AuthContextType = {
     isLoading: boolean,
@@ -19,6 +20,8 @@ type AuthContextType = {
     setBottomShow: Function,
     userBoards: AppUpdateUserBoardsRequest,
     setUserBoards: Function,
+    userGears: AddUpdateUserGearsRequest,
+    setUserGears: Function,
     postType: number,
     setPostType: Function,
 }
@@ -69,6 +72,15 @@ const UserBoardsDefault: AppUpdateUserBoardsRequest = {
     UserId: 0,
     Title: ""
 }
+const UserGearsDefault: AddUpdateUserGearsRequest ={
+    ImagesPath: [],
+    Title: "",
+    Condition: 0,
+    Description: "",
+    Price: "",
+    IsPosted: false,
+    UserId: 0
+}
 export const AuthContextDefaults: AuthContextType = {
     isLoading: false,
     setIsLoading: () => { },
@@ -94,6 +106,8 @@ export const AuthContextDefaults: AuthContextType = {
     setUserBoards: (AppUpdateUserBoardsRequest: AppUpdateUserBoardsRequest) => { },
     postType: 0,
     setPostType: () => { },
+    userGears: UserGearsDefault,
+    setUserGears: (AddUpdateUserGearsRequest: AddUpdateUserGearsRequest) => { },
 }
 const AuthContext = React.createContext<AuthContextType>(AuthContextDefaults);
 export function useAuthContext() {
@@ -108,10 +122,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const [userBoards, setUserBoards] = useState(UserBoardsDefault);
     const [postType, setPostType] = useState(0);
     const [lookups, setLookups] = useState<LookupsResponse>(AuthContextDefaults.lookups);
+    const [userGears, setUserGears] = useState(UserGearsDefault);
     const value = {
         isLoading, setIsLoading, user, setUser, selectedTab, setSelectedTab,
         lookups, setLookups, headerShow, setHeaderShow, bottomShow, setBottomShow
-        , userBoards, setUserBoards, postType, setPostType
+        , userBoards, setUserBoards, postType, setPostType, userGears, setUserGears
     };
     return (
         <AuthContext.Provider value={value}>

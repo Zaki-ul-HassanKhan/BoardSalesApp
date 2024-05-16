@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { NavigationContainer, ParamListBase, useNavigation } from '@react-navigation/native';
-import { GearCustomTabBar } from './GearCustomTabBar';
+import { BoardCustomTabBar } from './BoardCustomTabBar';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native';
 import { ConditionScreen } from './ConditionScreen';
@@ -28,7 +28,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 
 
-const GearTabNavigation = () => {
+const BoardTabNavigation = () => {
   
   const auth = useAuthContext();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
@@ -105,7 +105,7 @@ const GearTabNavigation = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <GearCustomTabBar selectedTab={auth.selectedTab} handleTabPress={handleTabPress} />
+      <BoardCustomTabBar selectedTab={auth.selectedTab} handleTabPress={handleTabPress} />
       {auth.selectedTab === 0 && <PostABoard />}
       {auth.selectedTab === 1 && <ConditionScreen/>}
       {auth.selectedTab === 2 && <BoardTypeScreen/>}
@@ -126,5 +126,5 @@ const GearTabNavigation = () => {
 
 
 
-export { GearTabNavigation };
+export { BoardTabNavigation };
 

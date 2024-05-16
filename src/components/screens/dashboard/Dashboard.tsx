@@ -1,16 +1,15 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'native-base';
-import FeaturedBoards from '../boards/dashboard/FeaturedBoards';
-import BoardScreen from '../boards/dashboard/BoardScreen';
 import GearScreen from '../gear/GearScreen';
-import PostBoard from '../boards/post/PostBoard';
 import ChatScreen from '../chat/ChatScreen';
 import MyListings from '../my-listings/MyListings';
 import { useAuthContext } from '../../context/AuthContext';
+import PostBoard from '../boards/post/PostBoard';
+import { BoardScreen } from '../boards/dashboard/BoardScreen';
 const Tab = createBottomTabNavigator();
 const Dashboard = () => {
     const [boardSource, setBoardSource] = useState(true);

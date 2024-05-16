@@ -6,7 +6,7 @@ interface CustomTabBarProps {
   handleTabPress: (index: number) => void;
 }
 
-const GearCustomTabBar: React.FC<CustomTabBarProps> = ({ selectedTab, handleTabPress }) => {
+const BoardCustomTabBar: React.FC<CustomTabBarProps> = ({ selectedTab, handleTabPress }) => {
   return (
     <View style={{
       flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#fff',
@@ -34,7 +34,7 @@ const GearCustomTabBar: React.FC<CustomTabBarProps> = ({ selectedTab, handleTabP
   );
 };
 
-export {GearCustomTabBar};
+export {BoardCustomTabBar};
 
 
 

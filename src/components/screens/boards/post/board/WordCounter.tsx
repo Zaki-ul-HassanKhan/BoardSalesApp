@@ -46,7 +46,7 @@ const countWords = (inputText:string):number => {
   console.log(inputText);
     // Remove extra white spaces and split the text by spaces to count words
  //   const wordsArray = inputText.trim().split(/\s+/);
-    return inputText.length;
+    return inputText ? inputText?.length: 0;
   };
 //   const handleTextChange = (newText:string) => {
 //     setText(newText);

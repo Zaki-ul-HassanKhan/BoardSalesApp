@@ -16,7 +16,7 @@ import backgroundImage from '../../../../assets/images/home-screen-img.jpg';
 import boardsalelogo from '../../../../assets/images/board-sale-logo.png';
 import orsigninwith from '../../../../assets/images/or-sign-in-with.png';
 import { Box, Button, Center, FormControl, HStack, Heading, Image, Input, Link, Pressable, ScrollView, Text, VStack, useToast } from 'native-base';
-import { AccessToken, LoginButton, Profile } from 'react-native-fbsdk-next';
+import { LoginButton, Profile } from 'react-native-fbsdk-next';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,6 +24,8 @@ import { UserResponseModel } from '../../../../models/user/UserResponseModel';
 import { GoogleLoginResponseModel } from '../../../../models/google/GoogleLoginResponseModel';
 import useUserService from '../../../../shared/services/user/user.service';
 import { LookupsResponse } from '../../../../models/user/LooksResponse';
+import { Settings } from "react-native-fbsdk-next"
+
 const LoginScreen = () => {
   const toast = useToast();
   const ConfigureGoogleSignIn = () => {
@@ -43,7 +45,8 @@ const LoginScreen = () => {
 
 
   const handleLoginFinished = (error: any, result: any) => {
-    console.log(result);
+    
+    console.log("IS FACEBOOK CLICKED");
     if (error) {
       console.log("login has error: " + result.error);
     } else if (result.isCancelled) {
@@ -53,7 +56,9 @@ const LoginScreen = () => {
     }
   };
 
-  const currentProfile = Profile.getCurrentProfile().then(
+  const currentProfile = () => {
+    console.log("CURRENT PROFILE");
+    Profile.getCurrentProfile().then(
     function(currentProfile) {
       if (currentProfile) {
         console.log("The current logged user is: " +
@@ -66,9 +71,9 @@ const LoginScreen = () => {
       }
     }
   );
+}
   useEffect(() => {
-    console.log(GoogleSignin.getCurrentUser());
-    ConfigureGoogleSignIn();
+    ConfigureGoogleSignIn();Settings.initializeSDK();
   }, []);
   const auth = useAuthContext();
   const authService = useAuthService();
@@ -76,7 +81,7 @@ const LoginScreen = () => {
   const [password, setPassword] = React.useState('');
   const [passwordShow, setPasswordShow] = React.useState(false);
   const userService = useUserService();
-  console.log("IS RENDERED");
+
   const RegisterSocialUser = (UserName: string, Name: string, ProfilePicture: string, platform: string) => {
     userService.createUser({
       UserName: UserName,
@@ -123,7 +128,6 @@ const LoginScreen = () => {
 
   const GetLookUps = () => {
     userService.getLookups().then((res: LookupsResponse) => {
-      console.log(auth.user);
       auth.setLookups(res);
       auth.setIsLoading(false);
       

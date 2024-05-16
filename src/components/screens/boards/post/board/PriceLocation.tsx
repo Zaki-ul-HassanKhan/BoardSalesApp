@@ -8,7 +8,7 @@ import { useAuthContext } from '../../../../context/AuthContext';
 
 
 const PriceLocation = () => {
-    const [text, settext] = useState('');
+    const [price, setPrice] = useState('');
     const auth = useAuthContext();
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -19,13 +19,14 @@ const PriceLocation = () => {
     const [selectedShowLocation, setSelectedShowLocation] = useState("");
   const onClose = () => setIsOpen(false);
 const onOk = () =>{
+    board.Price = price;
     setBoard(board);
     setIsOpen(false);
 }
   const cancelRef = React.useRef(null);
     const [Locationtext, setLocationtext] = useState('');
     const handleTextChange = (text: string) => {
-        settext(text);
+        setPrice(text);
     };
     const SelectLocation=(Locationtext:string)=>{
         setLocationtext(Locationtext);
@@ -33,7 +34,6 @@ const onOk = () =>{
     }
     const handleSubmit = () => {
         auth.setSelectedTab(12);
-        console.log("text:", text);
     };
     const [showToggle, setShowToggle] = useState(false);
     const [isSwapConsidered, setIsSwapConsidered] = useState(false);
@@ -83,7 +83,7 @@ const onOk = () =>{
                         style={styles.input}
                         placeholder="$"
                         onChangeText={handleTextChange}
-                        value={text}
+                        value={price}
                         keyboardType="numeric"
                     />
                     
