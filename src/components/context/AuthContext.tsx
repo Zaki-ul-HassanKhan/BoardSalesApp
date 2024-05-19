@@ -48,7 +48,7 @@ const UserDefaults: UserResponseModel = {
     boardType: 0,
     distance: 0
 }
-const UserBoardsDefault: AppUpdateUserBoardsRequest = {
+export const UserBoardsDefault: AppUpdateUserBoardsRequest = {
     ImagesPath: [],
     Condition: 0,
     BoardType: 0,

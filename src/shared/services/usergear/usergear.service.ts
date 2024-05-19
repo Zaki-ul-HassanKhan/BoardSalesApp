@@ -7,7 +7,6 @@ function useUserGearService(){
     const {httpService} = useHttp(BASE_URL);
 const addUpdateUserGear = useCallback(
     (req: AddUpdateUserGearsRequest) => {
-        console.log("INPOST")
     return httpService.post('UserGear/AddUpdateUserGear',req)
 },
 [httpService]

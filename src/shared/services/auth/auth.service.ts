@@ -7,7 +7,6 @@ function useAuthService(){
 
     const postUserCredentials = useCallback(
         (req: LoginModel) => {
-            console.log("INPOST")
         return httpService.post('Authentication',req)
     },
     [httpService]

@@ -10,13 +10,13 @@ const WidthScreen = () => {
     const auth = useAuthContext();
     const [inches, setInches] = useState('');
     const handleInchesChange = (text: string) => {
-        var boards = auth.userBoards;
-        boards.Width = inches;
-        auth.setUserBoards(boards);
         setInches(text);
     };
     const handleSubmit = () => {
         auth.setSelectedTab(8);
+        var boards = auth.userBoards;
+        boards.Width = inches;
+        auth.setUserBoards(boards);
         console.log("Inches:", inches);
     };
     return (

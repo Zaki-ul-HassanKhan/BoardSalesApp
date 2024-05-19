@@ -14,11 +14,9 @@ const ConditionScreen = () => {
             boards.Condition = 1;
             auth.setSelectedTab(2);
             setDisplayText('You clicked on Used');
-            console.log('You clicked on Used');
         } else if (text === 'New') {
             boards.Condition = 1;
             setDisplayText('You clicked on New');
-            console.log('You clicked on New');
 
         }
         

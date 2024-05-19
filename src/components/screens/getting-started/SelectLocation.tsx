@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { View , TouchableOpacity, TextInput, FlatList, StyleSheet, Dimensions} from 'react-native';
 import { useAuthContext } from '../../context/AuthContext';
 import { HStack, Icon, Slider, Switch, Text, useToast } from 'native-base';
@@ -18,8 +18,6 @@ const SelectLocation = () => {
   const [distance, setDistance] = useState(auth.user.distance);
   const userService = useUserService();
   const toast = useToast();
-  console.clear();
-  console.log(auth.lookups.locations);
   const onSearch = (search: string) => {
     if (search !== '') {
       let tempData = data.filter(item => {
@@ -30,12 +28,6 @@ const SelectLocation = () => {
       setData(auth.lookups.locations);
     }
   };
-
-  // useEffect(()=>{
-  //   var city = data.filter(x=>x.key == selectedCity)[0];
-  //   setSelectedShowCity(city.value);
-  //   console.log(city.value)
-  // },[]);
 
   return (
     <>
@@ -175,7 +167,6 @@ const SelectLocation = () => {
        <View style={{ position: 'absolute', bottom: 40, left: 0, right: 0, alignItems: 'center' }}>
        <TouchableOpacity
           onPress={() => {
-            console.log("ON NAME PARESS")
             if (auth.user.location != selectedLocation) {
               userService.updateUser({
                 UserId: auth.user.userId,
@@ -187,7 +178,7 @@ const SelectLocation = () => {
                 Distance: distance,
                 GetStartedCompleted:false
               }).then((res: UserResponseModel) => {
-                console.log(res);
+                
                 if (res.code == "400") {
                   toast.show({
                     description: res.message,

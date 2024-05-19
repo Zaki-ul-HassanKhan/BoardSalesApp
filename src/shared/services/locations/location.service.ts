@@ -13,7 +13,6 @@ function useLocationService(){
 
 const getLocations = useCallback(
     () => {
-        console.log("INPOST")
     return httpService.get(`User`)
 },
 [httpService]

@@ -21,7 +21,7 @@ import { NormalPost } from './NormalPost';
 import { FeaturedPost } from './FeaturedPost';
 import { PostedPriceLocation } from './PostedPriceLocation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useAuthContext } from '../../../../context/AuthContext';
+import { UserBoardsDefault, useAuthContext } from '../../../../context/AuthContext';
 import { PostABoard } from './PostaBoard';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -37,11 +37,20 @@ const BoardTabNavigation = () => {
       auth.setBottomShow(true);
       auth.setPostType(0);
       auth.setHeaderShow(false);
-    navigation.navigate("Post");
+      auth.setUserBoards(UserBoardsDefault);
+      navigation.navigate("Post");
 
     }
     auth.setSelectedTab(auth.selectedTab > 0 ? auth.selectedTab - 1 : auth.selectedTab);
   }
+  const handleCancelClick = () => {
+    
+      auth.setBottomShow(true);
+      auth.setPostType(0);
+      auth.setHeaderShow(false);
+      auth.setUserBoards(UserBoardsDefault);
+      navigation.navigate("Post");
+}
   const handleTabPress = (index: number) => {
     auth.setSelectedTab(index);
   };
@@ -100,7 +109,7 @@ const BoardTabNavigation = () => {
           </View>
         </View>
         <View style={{ paddingRight: 10 }}>
-          <TouchableOpacity onPress={() => handleImageClick()}>
+          <TouchableOpacity onPress={() => handleCancelClick()}>
             <Image source={require('../../../../../assets/images/close.png')} style={{ paddingRight: 20, width: 24, height: 24, borderRadius: 15 }} />
           </TouchableOpacity>
         </View>

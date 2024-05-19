@@ -40,8 +40,6 @@ const Dashboard = () => {
 
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed")
-                    console.log("Board");
                     auth.setHeaderShow(true);
                     setListingScreen(false);
                     setChatScreen(false);
@@ -65,8 +63,6 @@ const Dashboard = () => {
                 name="Board" component={BoardScreen} />
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed");
-                    console.log("Gear")
                     if (auth.bottomShow) {
                         setBoardSource(false);
                         auth.setHeaderShow(true);
@@ -93,9 +89,6 @@ const Dashboard = () => {
 
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed");
-                    console.log(inPostScreen);
-                    console.log("Post");
                     if (auth.bottomShow) {
                         auth.setHeaderShow(false);
                         setBoardSource(false);
@@ -131,8 +124,6 @@ const Dashboard = () => {
 
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed")
-                    console.log("Chat")
                     if (auth.bottomShow) {
                         auth.setHeaderShow(true);
                         setBoardSource(false);
@@ -159,8 +150,6 @@ const Dashboard = () => {
 
             <Tab.Screen options={() => ({
                 tabBarButton: () => (<TouchableOpacity onPress={() => {
-                    console.log("BoardPressed")
-                    console.log("MyListings")
                     if (auth.bottomShow) {
                         auth.setHeaderShow(true);
                         setBoardSource(false);

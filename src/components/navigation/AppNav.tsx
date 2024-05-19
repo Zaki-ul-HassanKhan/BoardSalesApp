@@ -70,7 +70,6 @@ const AppNav = () => {
 
   const GetLookUps = () => {
     userService.getLookups().then((res: LookupsResponse) => {
-      console.log(res);
       auth.setLookups(res);
       auth.setIsLoading(false);
 

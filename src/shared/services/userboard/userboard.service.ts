@@ -8,7 +8,6 @@ function useUserBoardService(){
     const {httpService} = useHttp(BASE_URL);
 const addUpdateUserBoard = useCallback(
     (req: AppUpdateUserBoardsRequest) => {
-        console.log("INPOST")
     return httpService.post('UserBoard/AddUpdateUserBoard',req)
 },
 [httpService]
@@ -16,7 +15,6 @@ const addUpdateUserBoard = useCallback(
 
 const dashboardBoards = useCallback(
     (req: DashboardBoardsRequest) => {
-        console.log("INPOST")
     return httpService.post('UserBoard/DashboardBoards',req)
 },
 [httpService]

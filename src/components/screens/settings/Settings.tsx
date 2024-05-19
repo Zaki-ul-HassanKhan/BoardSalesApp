@@ -14,7 +14,6 @@ const Settings = () => {
     const options = { message: "I am sharing my app link" }
     const InviteOthers = () => {
         Share.open(options).then((res) => {
-            console.log(res);
         })
             .catch((err) => {
                 err && console.log(err);

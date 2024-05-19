@@ -55,7 +55,6 @@ const YourFullName: React.FC<YourFullNameProps> = ({ individualOrShaper }) => {
       <View style={{ position: 'absolute', bottom: 40, left: 0, right: 0, alignItems: 'center' }}>
         <TouchableOpacity
           onPress={() => {
-            console.log("ON NAME PARESS")
             if (auth.user.name != name) {
               userService.updateUser({
                 UserId: auth.user.userId,
@@ -67,7 +66,6 @@ const YourFullName: React.FC<YourFullNameProps> = ({ individualOrShaper }) => {
                 Distance: auth.user.distance,
                 GetStartedCompleted:false
               }).then((res: UserResponseModel) => {
-                console.log(res);
                 if (res.code == "400") {
                   toast.show({
                     description: res.message,

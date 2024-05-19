@@ -28,13 +28,13 @@ const FilterYouLove = () => {
             Distance: auth.user.distance,
             GetStartedCompleted: true
         }).then((res: UserResponseModel) => {
-            console.log(res);
+            
             if (res.code == "400") {
                 toast.show({
                     description: res.message,
                 })
             } else {
-                console.log(res);
+                
                 auth.setUser((user: UserResponseModel) => {
                     return {
                         ...user,

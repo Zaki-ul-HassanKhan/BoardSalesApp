@@ -25,7 +25,6 @@ const Description = () => {
     };
     const handleSubmit = () => {
         auth.setSelectedTab(11);
-        console.log("Input box value:", text);
     };
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

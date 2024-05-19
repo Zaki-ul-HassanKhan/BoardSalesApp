@@ -29,13 +29,13 @@ const PriceDescription = () => {
         gears.Price = price;
         gears.Description = description;
         usergearservice.addUpdateUserGear(gears).then((res: AddUpdateUserGearsResponse) => {
-            console.log(res);
+            
             if (res.code == "400") {
                 toast.show({
                     description: res.message,
                 })
             } else {
-                console.log(res);
+                
               
             }
         });

@@ -32,7 +32,7 @@ const ProfilePicture = () => {
                 Distance: auth.user.distance,
                 GetStartedCompleted: false
             }).then((res: UserResponseModel) => {
-                console.log(res);
+                
                 if (res.code == "400") {
                     toast.show({
                         description: res.message,

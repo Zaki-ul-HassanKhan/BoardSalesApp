@@ -7,12 +7,13 @@ import { UpdatePasswordRequest } from "../../../models/user/UpdatePasswordReques
 import { DeleteAccountRequest } from "../../../models/user/DeleteAccountRequest";
 import { UserResponseModel } from "../../../models/user/UserResponseModel";
 import { UpdateUserRequest } from "../../../models/user/UpdateUserRequest";
+import { UserListingsRequest } from "../../../models/userlistings/UserListingsRequest";
 function useUserService(){
     const {httpService} = useHttp(BASE_URL);
 
     const createUser = useCallback(
         (req: RegisterUserRequest) => {
-            console.log("INPOST")
+            
         return httpService.post('User',req)
     },
     [httpService]
@@ -21,7 +22,7 @@ function useUserService(){
 
     const getUsers = useCallback(
         () => {
-            console.log("INPOST")
+            
         return httpService.get('User')
     },
     [httpService]
@@ -29,7 +30,7 @@ function useUserService(){
 
 const updatePassword = useCallback(
     (req: UpdatePasswordRequest) => {
-        console.log("INPOST")
+        
     return httpService.post('User/UpdatePassword',req)
 },
 [httpService]
@@ -37,7 +38,7 @@ const updatePassword = useCallback(
 
 const deleteAccount = useCallback(
     (req: DeleteAccountRequest) => {
-        console.log("INPOST")
+        
     return httpService.post('User/DeleteAccount',req)
 },
 [httpService]
@@ -45,7 +46,7 @@ const deleteAccount = useCallback(
 
 const updateUser = useCallback(
     (req: UpdateUserRequest) => {
-        console.log("INPOST")
+        
     return httpService.post('User/UpdateUser',req)
 },
 [httpService]
@@ -53,7 +54,7 @@ const updateUser = useCallback(
 
 const getUser = useCallback(
     (id:number) => {
-        console.log("INPOST")
+        
     return httpService.get(`User/${id}`)
 },
 [httpService]
@@ -61,8 +62,16 @@ const getUser = useCallback(
 
 const getLookups = useCallback(
     () => {
-        console.log("INPOST")
+        
     return httpService.get(`User/GetLookups`)
+},
+[httpService]
+);
+
+const getUserListings = useCallback(
+    (req: UserListingsRequest) => {
+        
+    return httpService.post('User/GetUserListings',req)
 },
 [httpService]
 );
@@ -74,7 +83,8 @@ const {current} = useRef({
     deleteAccount,
     updateUser,
     getUser,
-    getLookups
+    getLookups,
+    getUserListings
 })
 return current
 }

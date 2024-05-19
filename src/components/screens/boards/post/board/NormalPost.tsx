@@ -13,7 +13,7 @@ const NormalPost = () => {
     const auth = useAuthContext();
     const userBoardService = useUserBoardService();
     const [textInputValue, setTextInputValue] = useState('');
-    
+    console.log(auth.userBoards);
     const toast = useToast();
     const handleTextInputChange = (textInputValue: string) => {
         setTextInputValue(textInputValue);
@@ -21,13 +21,13 @@ const NormalPost = () => {
     const handleSubmit = () => {
 
         userBoardService.addUpdateUserBoard(auth.userBoards).then((res: AddUpdateUserBoardsResponse) => {
-            console.log(res);
+            
             if (res.code == "400") {
                 toast.show({
                     description: res.message,
                 })
             } else {
-                console.log(res);
+                
               
             }
         });

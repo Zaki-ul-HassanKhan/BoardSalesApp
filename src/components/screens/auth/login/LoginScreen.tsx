@@ -45,8 +45,6 @@ const LoginScreen = () => {
 
 
   const handleLoginFinished = (error: any, result: any) => {
-    
-    console.log("IS FACEBOOK CLICKED");
     if (error) {
       console.log("login has error: " + result.error);
     } else if (result.isCancelled) {
@@ -57,7 +55,6 @@ const LoginScreen = () => {
   };
 
   const currentProfile = () => {
-    console.log("CURRENT PROFILE");
     Profile.getCurrentProfile().then(
     function(currentProfile) {
       if (currentProfile) {
@@ -66,8 +63,6 @@ const LoginScreen = () => {
           + ". His profile id is: " +
           currentProfile.userID
         );
-
-        console.log(currentProfile);
       }
     }
   );
@@ -90,8 +85,6 @@ const LoginScreen = () => {
       ProfilePicture: ProfilePicture,
       Platform: platform
     }).then((res: UserResponseModel) => {
-      console.log("IF BACKKKK THEN");
-      console.log(res.token);
       auth.setUser((user: UserResponseModel) => {
         return { 
           ...user, 
@@ -107,11 +100,9 @@ const LoginScreen = () => {
   }
   const signIn = async () => {
     try {
-      console.log("SIGNINGGGOL");
       await GoogleSignin.hasPlayServices();
       var userInfo: GoogleLoginResponseModel = await GoogleSignin.signIn();
       RegisterSocialUser(userInfo.user.email, userInfo.user.name, userInfo.user.photo, "Google");
-      console.log(userInfo);
     } catch (error: any) {
       console.log(error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -183,7 +174,6 @@ const LoginScreen = () => {
               Password: password
             }).then((res: any) => {
              GetLookUps();
-              console.log("IF BACKKKK THEN");
               if (res.result.code === "400") {
                 toast.show({
                   description: res.result.message,

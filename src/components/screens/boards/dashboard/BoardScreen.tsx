@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextInput } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import useUserBoardService from '../../../../shared/services/userboard/userboard.service';
 import { DashboardBoardsResponse, Data } from '../../../../models/userboard/DashboardBoardsResponse';
@@ -9,7 +9,9 @@ export const BoardScreen = () => {
     const auth = useAuthContext();
     const userBoardService = useUserBoardService();
     const [boards, setBoards] = useState<Data[]>([]);
-    const [pairs, setPairs] = useState<Data[]>([]);
+    const [featured, setFeatured] = useState(false);
+    const [vintage, setVintage] = useState(false);
+    const [teamBoard, setTeamBoard] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [displayText, setDisplayText] = useState('');
 
@@ -17,24 +19,58 @@ export const BoardScreen = () => {
         setSearchQuery(text);
     };
 
+    const FeaturedSelected = () => {
+        if (!featured) {
+            dashboardAPICall(false, false, false, true);
+        }
+        else {
+            dashboardAPICall(true, false, false, false);
+        }
+        setFeatured(!featured);
+
+    }
+
+    const VintageSelected = () => {
+        if (!vintage) {
+            dashboardAPICall(false, true, false, false);
+        }
+        else {
+            dashboardAPICall(true, false, false, false);
+        }
+        setVintage(!vintage);
+
+    }
+
+    const TeamBoardSelected = () => {
+        if (!teamBoard) {
+            dashboardAPICall(false, false, true, false);
+        }
+        else {
+            dashboardAPICall(true, false, false, false);
+        }
+        setTeamBoard(!teamBoard);
+
+    }
 
     useEffect(() => {
+        dashboardAPICall(true, false, false, false);
+    }, []);
+
+    const dashboardAPICall = (Normal: boolean, Vintage: boolean, TeamBoard: boolean
+        , FeaturedBoard: boolean
+    ) => {
         userBoardService.dashboardBoards({
-            Normal: true,
-            Vintage: false,
-            TeamBoard: false,
-            FeaturedBoard: false,
+            Normal: Normal,
+            Vintage: Vintage,
+            TeamBoard: TeamBoard,
+            FeaturedBoard: FeaturedBoard,
             UserId: auth.user.userId
         }).then((res: DashboardBoardsResponse) => {
-            console.log("BOARDS");
-            console.log(res);
             setBoards(res.data);
-
         }).catch((error) => {
             console.log(error);
         });
-    }, []);
-
+    }
 
     const skipImageClick = () => {
         console.log('skip button pressed');
@@ -75,49 +111,60 @@ export const BoardScreen = () => {
             <ScrollView>
 
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, paddingHorizontal: 30, margin: 10 }}>
-                    {/* <View style={{borderWidth:0.5,borderColor:'black', padding:5}}>
-                        <Text style={{ color: 'black', paddingTop: 5, marginBottom: 5 }}>Featured Boards</Text>
-                    </View> */}
+
+
                     <View>
-                        <Text style={{ color: 'black', paddingTop: 5, marginBottom: 5 }}>Featured Boards</Text>
-                        <View style={{ borderBottomWidth: 1, borderColor: 'black' }} />
+                        <TouchableOpacity onPress={() => FeaturedSelected()}>
+                            <Text style={featured ? styles.Selected : styles.NotSelected} >Featured Boards</Text></TouchableOpacity>
+                        {!featured &&
+                            <View style={{ borderBottomWidth: 1, borderColor: 'black' }} />
+                        }
+                    </View>
+
+                    <View style={{ marginLeft: 50 }}>
+                    <TouchableOpacity onPress={() => TeamBoardSelected()}>
+                            <Text style={teamBoard ? styles.Selected : styles.NotSelected} >Teams Boards</Text></TouchableOpacity>
+                        {!featured &&
+                            <View style={{ borderBottomWidth: 1, borderColor: 'black' }} />
+                        }
                     </View>
                     <View style={{ marginLeft: 50 }}>
-                        <Text style={{ color: 'black', paddingTop: 5, marginBottom: 5 }}>Team Boards</Text>
-                        <View style={{ borderBottomWidth: 1, borderColor: 'black' }} />
-                    </View>
-                    <View style={{ marginLeft: 50 }}>
-                        <Text style={{ color: 'black', paddingTop: 5, marginBottom: 5 }}>Vintage Boards</Text>
-                        <View style={{ borderBottomWidth: 1, borderColor: 'black' }} />
+                    <TouchableOpacity onPress={() => VintageSelected()}>
+                            <Text style={vintage ? styles.Selected : styles.NotSelected} >Vintage Boards</Text></TouchableOpacity>
+                        {!featured &&
+                            <View style={{ borderBottomWidth: 1, borderColor: 'black' }} />
+                        }
                     </View>
                 </View>
 
 
                 {/* Search bar */}
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 30, paddingTop: 40 }}>
-                    <TextInput
-                        style={{ flex: 1, borderWidth: 1, borderColor: 'gray', borderRadius: 10, paddingHorizontal: 10 }}
-                        placeholder="Let's find your magic board..."
-                        onChangeText={handleSearch}
-                        value={searchQuery}
-                    />
-                </View>
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
-                    {/* Left side - Location */}
-                    <View style={{}}>
-                        <Text>Your Location</Text>
-                        {/* Add your location component here */}
-                    </View>
-
-                    {/* Right side - Image */}
-                    <TouchableOpacity onPress={() => skipImageClick()}>
-
-                        <View >
-                            <Image source={require('../../../../assets/images/filter-control.jpg')} style={{ width: 40, height: 50, resizeMode: 'contain' }} />
+                {!(featured || vintage || teamBoard) && 
+                    <>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 30, paddingTop: 40 }}>
+                            <TextInput
+                                style={{ flex: 1, borderWidth: 1, borderColor: 'gray', borderRadius: 10, paddingHorizontal: 10 }}
+                                placeholder="Let's find your magic board..."
+                                onChangeText={handleSearch}
+                                value={searchQuery}
+                            />
                         </View>
-                    </TouchableOpacity>
-                </View>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+
+                            <View style={{}}>
+                                <Text>Your Location</Text>
+                            </View>
+
+                            <TouchableOpacity onPress={() => skipImageClick()}>
+
+                                <View >
+                                    <Image source={require('../../../../assets/images/filter-control.jpg')} style={{ width: 40, height: 50, resizeMode: 'contain' }} />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                }
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
                     <FlatList
                         data={boards}
@@ -131,3 +178,17 @@ export const BoardScreen = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    Selected: {
+        borderWidth: 0.5,
+        borderColor: 'black',
+        padding: 5
+    },
+    NotSelected: {
+        color: 'black',
+        paddingTop: 5,
+        marginBottom: 5
+    }
+
+});

@@ -46,21 +46,7 @@ export const PostABoard = () => {
           onPress={drag}
           disabled={isActive}
         >
-          {/* <Image source={{ uri: PROFILEPIC_BASE_URL + auth.user.profilePicture }} style={{ width: 50, height: 30, resizeMode: 'contain' }} /> */}
-          <Image source={{uri: item}}   style={{  width: 50, height: 30, resizeMode: 'contain'}} />
-          {/* <Image
-                source={{
-                  uri: image,
-                }}
-              /> */}
-          {/* <Image
-        source={{
-          uri: 'data:image/jpeg;base64,',
-        }}
-      /> */}
-
-          {/* <Image src={auth.} */}
-          {/* <Text>{item}</Text> */}
+          <Image source={{uri: item}}   style={{  width: 80, height: 50, resizeMode: 'contain'}} />
         </Pressable>
       </ScrollView>
     );
@@ -69,14 +55,11 @@ export const PostABoard = () => {
     <ScrollView>
       {data && data.length > 0 && <>
         <View>
-          <HStack space={0} marginTop={5} marginLeft={3}>
+          <HStack space={0} marginTop={5} marginBottom='48' marginLeft={3}>
             <TouchableOpacity onPress={handleImagePicker}>
-              <View style={{ justifyContent: 'space-between', paddingLeft: 30 }}>
-                <Image source={require('../../../../../assets/images/upload-img-icon.png')} style={{ width: 50, height: 30, resizeMode: 'contain' }} />
+              <View style={{ justifyContent: 'space-between', paddingLeft: 20 }}>
+                <Image source={require('../../../../../assets/images/upload-img-icon.png')} style={{ width: 80, height: 50, resizeMode: 'contain' }} />
               </View>
-              {/* <View style={{ justifyContent: 'space-between', paddingHorizontal: 40 }}>
-                  {image != ""?  <Image source={{uri:image}} /> : <Text>No image path</Text>}
-                  </View> */}
             </TouchableOpacity>
             <DraggableFlatList
               data={data}

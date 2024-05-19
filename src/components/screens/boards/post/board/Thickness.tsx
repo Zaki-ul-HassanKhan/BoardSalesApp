@@ -8,16 +8,16 @@ import { useAuthContext } from '../../../../context/AuthContext';
 
 const Thickness = () => {
     const auth = useAuthContext();
-    const [inches, setInches] = useState('');
+    const [thickness, setThickness] = useState('');
     const handleInchesChange = (text: string) => {
-        var boards = auth.userBoards;
-        boards.Thickness = inches;
-        auth.setUserBoards(boards);
-        setInches(text);
+        setThickness(text);
     };
     const handleSubmit = () => {
         auth.setSelectedTab(9);
-        console.log("Inches:", inches);
+        var boards = auth.userBoards;
+        boards.Thickness = thickness;
+        auth.setUserBoards(boards);
+        console.log("thickness:", thickness);
     };
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -42,14 +42,14 @@ const Thickness = () => {
                             }}
                             // placeholder="Inches"
                             keyboardType="numeric"
-                            value={inches}
+                            value={thickness}
                             onChangeText={handleInchesChange}
                         />
                     </View>
                     <View style={{ flexDirection: 'row', }}>
 
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{}}>Inches/optioanal...</Text>
+                            <Text style={{}}>Thickness/optioanal...</Text>
                         </View>
                     </View>
                 </View>
