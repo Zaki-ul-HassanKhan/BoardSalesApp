@@ -1,14 +1,19 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Image } from 'native-base'
+import { Button, Icon, Image } from 'native-base'
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import useUserService from '../../../shared/services/user/user.service';
 import { useAuthContext } from '../../context/AuthContext';
 import { UserListingResponse } from '../../../models/userlistings/UserListingsReponse';
 import { Data } from '../../../models/userboard/DashboardBoardsResponse';
+import Entypo from 'react-native-vector-icons/Entypo';
+import { BOARDPIC_BASE_URL } from '../../../config/config';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const MyListings = () => {
   const userService = useUserService();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const auth = useAuthContext();
   const datas = ['Active', 'Archived'];
   const [data] = useState(datas);
@@ -19,6 +24,7 @@ const MyListings = () => {
   const [userBoards, setUserBoards] = useState<Data[]>([]);
   const [userGears, setUserGears] = useState<Data[]>([]);
   useEffect(() => {
+    console.log(auth.user);
     setUserBoards([]);
     setUserGears([]);
     userService.getUserListings({
@@ -28,28 +34,43 @@ const MyListings = () => {
       IsArchive: isActive == "Archive" ? true : false,
       IsActive: isActive == "Active" ? true : false,
     }).then((res: UserListingResponse) => {
+      console.log(res.userBoards);
+      res.userBoards.forEach(z=>z.imagesPath = z.imagesPath?.split(",")[0] + ".png");
+      console.log(res.userBoards);
       setUserBoards(res.userBoards);
       setUserGears(res.userGears);
     }).catch((error) => {
       console.log(error);
     });
   }, [forSale, sold, isActive]);
+  const handleImageClick = (text: string) => {
+    // Perform functionality here when the image is clicked
+    if (text === 'Used$350') {
+        // setDisplayText('You clicked on Used$350');
+        console.log("you select", text)
+    } else if (text === 'New$300') {
+        // setDisplayText('You clicked on New$300');
+        console.log("you select", text)
 
+    }
+};
   const renderItem = ({ item }: any) => (
     <View style={{ alignItems: 'flex-start', paddingTop: 20, paddingLeft: 10 }}>
-      <View style={{ alignItems: 'center', borderWidth: 1, borderTopEndRadius: 10, borderTopStartRadius: 10, padding: 5 }}>
-        <Image source={require('../../../assets/images/01.jpg')} style={{ width: 155, height: 150, borderRadius: 15, resizeMode: 'contain', marginTop: -50, }} />
-        <View style={{ width: 150, alignItems: 'center', marginTop: -50, borderWidth: 1, borderTopEndRadius: 10, borderTopStartRadius: 10, padding: 10, backgroundColor: item.condition ? '#eb4e5b' : '#477ef8' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#fff', left: -30 }}>{item.condition ? "New" : "Used"}</Text>
-            <Text style={{ fontWeight: 'bold', color: '#fff', right: -30, marginTop: 12 }}>$350</Text>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontWeight: '600', fontSize: 12, color: '#fff', left: -30 }}>5'7"X26.62L</Text>
-          </View>
+            <TouchableOpacity onPress={() => handleImageClick('Used$350')}>
+                <View style={{ alignItems: 'center', borderWidth: 1, borderTopEndRadius: 10, borderTopStartRadius: 10, padding: 5 }}>
+                    <Image source={require('../../../assets/images/01.jpg')} style={{ width: 155, height: 150, borderRadius: 15, resizeMode: 'contain', marginTop: -50, }} />
+                    <View style={{ width: 150, alignItems: 'center', marginTop: -50, borderWidth: 1, borderTopEndRadius: 10, borderTopStartRadius: 10, padding: 10, backgroundColor: item.condition ? '#eb4e5b' : '#477ef8' }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontWeight: 'bold', fontSize: 18, color: '#fff', left: -30 }}>{item.condition ? "New" : "Used"}</Text>
+                            <Text style={{ fontWeight: 'bold', color: '#fff', right: -30, marginTop: 12 }}>$350</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontWeight: '600', fontSize: 12, color: '#fff', left: -30 }}>5'7"X26.62L</Text>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
         </View>
-      </View>
-    </View>
   );
   return (
     <>
@@ -136,7 +157,7 @@ const MyListings = () => {
             </View>
           </View>
 
-          {(forSale && (userBoards == null || userBoards.length == 0)) &&
+          {forSale && (userBoards == null || userBoards.length == 0) &&
             <>
               <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', marginTop: "40%" }}>
                 <Image source={require("../../../assets/images/no-item-for-sale.png")} width={70} height={70} alt='hehe' />
@@ -144,9 +165,13 @@ const MyListings = () => {
               <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', marginTop: "5%" }}>
                 <Text>No Items for Sale</Text>
               </View>
+              <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', marginTop: "30%" }}>
+                <Button colorScheme="blue" width={120} size="sm" leftIcon={<Icon ml="2" size="4" as={<Entypo name="plus" />} />} onPress={()=>{navigation.navigate("Post")}}>Post an Item</Button>
+              </View>
             </>
+
           }
-          {(sold && (userGears == null || userGears.length == 0)) &&
+          {sold && (userGears == null || userGears.length == 0) &&
             <>
               <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', marginTop: "40%" }}>
                 <FontAwesome5Icon name='shopping-cart' size={40} ></FontAwesome5Icon>
@@ -154,9 +179,14 @@ const MyListings = () => {
               <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', marginTop: "5%" }}>
                 <Text>No Items Sold</Text>
               </View>
+              <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center', marginTop: "30%" }}>
+                <Button colorScheme="blue" width={120} size="sm" leftIcon={<Icon ml="2" size="4" as={<Entypo name="plus" />} onPress={()=>{navigation.navigate("Post")}} />}>Post an Item</Button>
+              </View>
+
+
             </>
           }
-          {userBoards != null &&
+          {(userBoards == null || userBoards.length >= 0) != null &&
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
               <FlatList
@@ -167,7 +197,7 @@ const MyListings = () => {
             </View>
 
           }
-          {userGears != null &&
+          {(userGears == null || userGears.length >= 0) &&
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
               <FlatList
@@ -210,5 +240,10 @@ const styles = StyleSheet.create({
   filler: {
     flex: 1, // Fill remaining space
   },
+  imgContainer: {
+    flex: 1,
+    // You can add additional styles to the container if needed
+  },
+  image: StyleSheet.absoluteFillObject
 });
 export default MyListings;
